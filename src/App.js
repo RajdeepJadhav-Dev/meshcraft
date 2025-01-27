@@ -18,6 +18,7 @@ import SignUp from "./Components/SignUp/SignUp";
 import Profile from "./Components/Profile/Profile";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Components/ResetPassword/ResetPassword";
+import AboutUs from "./Components/AboutUs/Aboutus";
 
 // Register GSAP ScrollTo Plugin
 gsap.registerPlugin(ScrollToPlugin);
@@ -38,7 +39,7 @@ function App() {
           <Route path= "/profile" element={<Profile/>}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword/>}></Route>
           <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
-          {/* <Route path="/about" element={<AboutUs/>}></Route> */}
+          <Route path="/about" element={<AboutUs/>}></Route>
     
         </Routes>
       </BrowserRouter>

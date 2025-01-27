@@ -71,6 +71,7 @@ const Profile = () => {
 
         setDiscordUsername(discordUsername);
         setDiscordAvatar(discordAvatar);
+        window.location.href = "/profile";
       }
     } else {
       window.location.href = "/signup";
