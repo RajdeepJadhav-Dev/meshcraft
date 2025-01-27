@@ -336,7 +336,7 @@ app.get("/auth/discord", (req, res) => {
         }
   
         res.redirect(
-            `${process.env.FRONTEND_URL||'http://localhost:3000'}/profile?discordConnected=true`
+            `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?userId=${userId}&discordId=${discordUser.id}&discordUsername=${encodeURIComponent(discordUser.username)}&discordAvatar=${encodeURIComponent(avatarUrl)}&discordConnected=true`
           );
           
     } catch (error) {
@@ -344,40 +344,6 @@ app.get("/auth/discord", (req, res) => {
       res.status(500).send("Failed to connect Discord");
     }
   });
-
-
-app.get('/get-discord-profile', async (req, res) => {
-    try {
-      const { userId } = req.query;
-  
-      if (!userId) {
-        return res.status(400).json({ error: "User ID is required" });
-      }
-  
-      const user = await UserSchema.findById(userId);
-  
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-  
-      const discordData = {
-        discordId: user.discordId,
-        discordUsername: user.discordUsername,
-        discordAvatar: user.discordAvatar
-      };
-  
-      if (!discordData.discordId) {
-        return res.status(400).json({ error: "Discord not connected" });
-      }
-  
-      res.status(200).json(discordData);
-  
-    } catch (error) {
-      console.error("Error fetching Discord profile:", error);
-      res.status(500).json({ error: "An error occurred" });
-    }
-  });
-  
 
 
 

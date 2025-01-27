@@ -42,52 +42,35 @@ const Profile = () => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    const queryParams = new URLSearchParams(window.location.search);
+    const queryParams = new URLSearchParams(location.search);
     const discordConnected = queryParams.get("discordConnected");
+    const discordId = queryParams.get("discordId");
+    const discordUsername = queryParams.get("discordUsername");
+    const discordAvatar = queryParams.get("discordAvatar");
 
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
       setUsername(parsedUser.username);
 
+      if (parsedUser.discordId) {
+        setDiscordUsername(parsedUser.discordUsername);
+        setDiscordAvatar(parsedUser.discordAvatar);
+      }
+
       if (discordConnected) {
-        const fetchDiscordProfile = async () => {
-          try {
-            setIsLoading(true); 
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            ...parsedUser,
+            discordId,
+            discordAvatar,
+            discordUsername,
+          })
+        );
 
-            const response = await fetch(`https://meshcraft-1.onrender.com/get-discord-profile?userId=${parsedUser._id}`);
-            const data = await response.json();
-
-            if (response.ok) {
-              const { discordUsername, discordAvatar } = data;
-
-              localStorage.setItem(
-                "user",
-                JSON.stringify({
-                  ...parsedUser,
-                  discordUsername,
-                  discordAvatar,
-                })
-              );
-
-              setDiscordUsername(discordUsername);
-              setDiscordAvatar(discordAvatar);
-            } else {
-              console.error("Error fetching Discord profile:", data.error);
-            }
-          } catch (error) {
-            console.error("Error fetching Discord profile:", error);
-          } finally {
-            setIsLoading(false); 
-          }
-        };
-
-        fetchDiscordProfile();
-      } else {
-        if (parsedUser.discordUsername && parsedUser.discordAvatar) {
-          setDiscordUsername(parsedUser.discordUsername);
-          setDiscordAvatar(parsedUser.discordAvatar);
-        }
+        setDiscordUsername(discordUsername);
+        setDiscordAvatar(discordAvatar);
       }
     } else {
       window.location.href = "/signup";
