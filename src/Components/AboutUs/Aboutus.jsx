@@ -20,11 +20,11 @@ const MeetOurTeam = () => {
   return (
     <motion.div
       ref={sectionRef}
-      className="team-section"
-      style={{ opacity, overflow: 'hidden' }}
+      className="relative min-h-screen overflow-hidden bg-black text-white p-20"
+      style={{ opacity }}
     >
       <motion.h2
-        className="section-title"
+        className="text-7xl font-bold text-right mr-12 ml-14 leading-tight"
         style={{
           x: titleX,
           position: 'relative'
@@ -33,7 +33,7 @@ const MeetOurTeam = () => {
         MEET OUR TEAM
       </motion.h2>
       <motion.div
-        className="team-description"
+        className="text-xl text-gray-300 text-left mr-14 leading-relaxed"
         style={{
           x: descriptionX,
           position: 'relative'
@@ -91,32 +91,28 @@ const AboutUs = () => {
 
 
   return (
-    <div className="about-us-page">
-      {/* Gaming Console Panel */}
-      <div className="console-panel">
-        <div className="outer-box">
-          {/* Circles for the console */}
-          <div className="circle-group">
-            <span className="circle"></span>
-            <span className="circle"></span>
-            <span className="circle"></span>
-          </div>
-          <motion.p
-            className="breadcrumb"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
-            Meshcraft / About Us
-          </motion.p>
-          <motion.div
-            className="inner-box"
-            whileHover={{ boxShadow: "0px 8px 20px rgba(94, 154, 255, 0.7)" }}
-          >
-            {/* Animated MESHCRAFT Title */}
-            <div className="meshcraft-title-container">
+    <div className="min-h-screen bg-black text-white py-20 px-5 relative">
+    <div className="flex justify-center items-center my-12 relative pb-12">
+      <div className="bg-gray-800 border-2 border-white rounded-2xl p-5 w-11/12 max-w-7xl shadow-lg transition-shadow duration-300 hover:shadow-blue-400/70 relative">
+        <div className="absolute top-2.5 left-5 flex gap-2.5">
+          <span className="w-3 h-3 bg-gray-900 rounded-full"></span>
+          <span className="w-3 h-3 bg-gray-900 rounded-full"></span>
+          <span className="w-3 h-3 bg-gray-900 rounded-full"></span>
+        </div>
+        
+        <motion.p
+          className="text-sm text-gray-400 text-center -mt-2.5 mb-2.5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          Meshcraft / About Us
+        </motion.p>
+        <motion.div className="bg-gray-900 border-2 border-white rounded-2xl p-10 text-center shadow-inner">
+            {/* Title container */}
+            <div className="flex justify-center items-center mb-5">
               <motion.h1
-                className="meshcraft-title left-word"
+                className="text-6xl md:text-8xl font-bold text-white opacity-0"
                 initial={{ x: "-100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ 
@@ -129,8 +125,8 @@ const AboutUs = () => {
                 MESH
               </motion.h1>
               <motion.h1
-                className="meshcraft-title right-word"
-                initial={{ x: "100%", opacity: 0 }}
+                className="text-6xl md:text-8xl font-bold text-white opacity-0"
+                initial={{ x: "-100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ 
                   type: "spring", 
@@ -144,7 +140,7 @@ const AboutUs = () => {
             </div>
             {/* Description */}
             <motion.p
-              className="description"
+              className="text-lg text-gray-300 leading-relaxed max-w-3xl mx-auto animate-fadeIn"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1.5 }}
@@ -165,43 +161,45 @@ const AboutUs = () => {
       <MeetOurTeam />
 
       {/* Panels Section */}
-      <div className="panels-section">
-        <div className="panels-container">
+      <div className="mt-12 overflow-hidden relative w-full">
+        <div className="flex py-10 animate-slowMarquee">
           {loopDepartments.map((dept, index) => (
             <div
               key={index}
-              className={`square-panel ${hoveredIndex === index ? 'hovered' : ''}`}
+              className={`flex-shrink-0 mr-10 transition-transform duration-300 relative 
+                ${hoveredIndex === index ? 'scale-105 z-10' : ''}`}
               onMouseEnter={() => handlePanelEnter(index)}
               onMouseLeave={handlePanelLeave}
             >
-              <div className="outer-panel">
-              <div className="inner-panel">
-  <div className="panel-image-container">
-    <img
-      src={dept.image}
-      alt={dept.title}
-      className="panel-image"
-    />
-  </div>
-  <div className="panel-content">
-    <h3 className="panel-title">{dept.title}</h3>
-    <div className="count-container">
-      <span>Number of People : </span>
-      <motion.span
-        className="count"
-        initial={{ y: "100%" }}
-        animate={{ y: "0%" }}
-        transition={{
-          duration: 1,
-          ease: "easeOut",
-        }}
-      >
-        {dept.count}
-      </motion.span>
-    </div>
-  </div>
-</div>
-
+              <div className="bg-gray-800 rounded-2xl border-2 border-white p-4 min-w-[250px] h-[350px] shadow-lg transition-shadow duration-300 overflow-hidden">
+                <div className="relative bg-transparent rounded-2xl border-2 border-white h-full flex flex-col overflow-hidden">
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                    <img
+                      src={dept.image}
+                      alt={dept.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="relative z-10 p-4 text-center">
+                    <h3 className="text-base font-bold text-white mb-1">
+                      {dept.title}
+                    </h3>
+                    <div className="mt-[230px] text-sm text-white">
+                      <span>Number of People : </span>
+                      <motion.span
+                        className="text-blue-300"
+                        initial={{ y: "100%" }}
+                        animate={{ y: "0%" }}
+                        transition={{
+                          duration: 1,
+                          ease: "easeOut",
+                        }}
+                      >
+                        {dept.count}
+                      </motion.span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

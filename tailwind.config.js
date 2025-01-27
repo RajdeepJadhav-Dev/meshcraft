@@ -28,11 +28,6 @@ module.exports = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
-      },
-      animation: {
-        spin: "slowspin 3s linear infinite", // Adjust duration (5s here) as desired
-      },
-      keyframes: {
         bounce: {
           "0%, 100%": {
             transform: "translateY(-25%)",
@@ -43,11 +38,6 @@ module.exports = {
             animationTimingFunction: "cubic-bezier(0, 0, 0.2, 1)",
           },
         },
-      },
-      animation: {
-        bounce: "bounce 5s infinite",
-      },
-      keyframes: {
         float: {
           "0%": {
             transform: "translateY(0px)"
@@ -59,10 +49,28 @@ module.exports = {
             transform: "translateY(0px)"
           }
         },
+        slowMarquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-33.33%)' },
+        },
+        fadeIn: {
+          '0%': { 
+            opacity: '0',
+            transform: 'translateY(20px)'
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'translateY(0)'
+          },
+        }
       },
-      animation:{
-        float:"float 3s ease-in-out infinite"
-      }
+      animation: {
+        spin: "slowspin 3s linear infinite", 
+        bounce: "bounce 5s infinite",
+        float: "float 3s ease-in-out infinite",
+        slowMarquee: 'slowMarquee 40s linear infinite',
+        fadeIn: 'fadeIn 2.5s ease-in-out',
+      },
     },
   },
   plugins: [],
