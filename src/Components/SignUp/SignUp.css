@@ -1,0 +1,81 @@
+.perspective {
+  perspective: 1500px; /* Increased for a smoother 3D effect */
+}
+
+.flip-container {
+  width: 100%;
+  max-width: 1300%;
+  height: 500px;
+  position: relative;
+  overflow: hidden; /* Ensures images do not spill outside the container */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.flipper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease-in-out;
+  transform-origin: center; 
+}
+
+.flipped .flipper {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
+  backface-visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+
+.image-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content:center;
+  align-items: center;
+}
+
+
+.image-section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Make it relative for positioning the pseudo-element */
+  overflow: hidden; /* Ensure the background doesn't spill out */
+}
+
+.image-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../../assets/signup/2.jpg') center/cover no-repeat; /* Replace with your image URL */
+  opacity: 0.4; /* Adjust transparency level */
+  z-index: 0; /* Place it behind the content */
+}
+
+.image-section img {
+  margin-left: 4em;
+  position: relative; /* Ensure it stays above the background */
+  z-index: 1; /* Keep it above the pseudo-element */
+  width: 100%; /* Adjust this value to make the image bigger */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 100%; /* Prevent it from exceeding the container's width */
+}
+
