@@ -336,7 +336,7 @@ app.get("/auth/discord", (req, res) => {
         }
   
         res.redirect(
-            `http://localhost:3000/profile?userId=${userId}&discordId=${discordUser.id}&discordUsername=${encodeURIComponent(discordUser.username)}&discordAvatar=${encodeURIComponent(avatarUrl)}&discordConnected=true`
+            `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?userId=${userId}&discordId=${discordUser.id}&discordUsername=${encodeURIComponent(discordUser.username)}&discordAvatar=${encodeURIComponent(avatarUrl)}&discordConnected=true`
           );
           
     } catch (error) {
@@ -345,25 +345,6 @@ app.get("/auth/discord", (req, res) => {
     }
   });
 
-//   app.get('/check-password', async (req, res) => {
-//     try {
-//         const { userId } = req.query;
-
-//         if (!password || !userId) {
-//             return res.status(400).json("Password and User ID are required");
-//         }
-
-//         const user = await UserSchema.findById(userId);
-
-//         if (!user) {
-//             return res.status(404).json("User not found");
-//         }
-
-//         return res.json(user.password);
-//     } catch (err) {
-//         res.status(500).json("Error checking password");
-//     }
-// });
 
 
 
