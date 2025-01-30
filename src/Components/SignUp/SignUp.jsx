@@ -1,37 +1,49 @@
 import React, { useState } from "react";
 import "./SignUp.css";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import login from "../../assets/signup/login.png";
 import register from "../../assets/signup/register.png";
 import axios from "axios";
 
-const Input = ({ id, label, type, autoComplete, value, onChange, icon, error }) => (
-  <div className="mb-4 relative">
-    <label htmlFor={id} className="block text-sm font-medium text-gray-200 mb-2">
-      {label}
-    </label>
-    <div className="relative">
-      <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-        {icon}
-      </span>
-      <input
-        id={id}
-        name={id}
-        type={type}
-        autoComplete={autoComplete}
-        value={value}
-        onChange={onChange}
-        className={`w-full px-10 py-2 bg-gray-800 text-gray-100 border ${
-          error ? "border-red-500" : "border-gray-600"
-        } rounded-lg focus:outline-none focus:ring-2 ${
-          error ? "focus:ring-red-500" : "focus:ring-blue-500"
-        }`}
-      />
-    </div>
-    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-  </div>
-);
+const Input = ({ id, label, type, autoComplete, value, onChange, icon, error }) => {
+  const [showPassword, setShowPassword] = useState(false);
 
+  return (
+    <div className="mb-4 relative">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-200 mb-2">
+        {label}
+      </label>
+      <div className="relative">
+        <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
+          {icon}
+        </span>
+        <input
+          id={id}
+          name={id}
+          type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={onChange}
+          className={`w-full px-10 py-2 bg-gray-800 text-gray-100 border ${
+            error ? "border-red-500" : "border-gray-600"
+          } rounded-lg focus:outline-none focus:ring-2 ${
+            error ? "focus:ring-red-500" : "focus:ring-blue-500"
+          }`}
+        />
+        {type === 'password' && (
+          <button
+            type="button"
+            className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        )}
+      </div>
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+    </div>
+  );
+};
 export default function SignUp() {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [formData, setFormData] = useState({

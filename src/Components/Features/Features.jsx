@@ -34,7 +34,7 @@ const ExpandingBoxes = () => {
  
   return (
 <>
-<section className="py-4 bg-[#0a0a0a]">
+<section className="py-4 bg-black">
 <div className="container mx-auto px-4">
 <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
           Features that Make Us Stand Out

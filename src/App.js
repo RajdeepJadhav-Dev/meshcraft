@@ -40,6 +40,7 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword/>}></Route>
           <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
           <Route path="/about" element={<AboutUs/>}></Route>
+  
     
         </Routes>
       </BrowserRouter>

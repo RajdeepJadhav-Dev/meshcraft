@@ -89,11 +89,7 @@ export default function Navbar() {
             Services
           </li>
           </Link>
-          <Link to='/contact'>
-          <li className="lg:pr-10  sm:pr-5  hover:text-transparent bg-clip-text bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24]">
-            Contact
-          </li>
-          </Link>
+      
          
       
           <Link to='/signup'>
