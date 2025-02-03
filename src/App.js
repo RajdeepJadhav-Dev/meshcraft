@@ -11,14 +11,15 @@ import Navbar from "../src/Components/Navbar/Navbar";
 // import Features from "./componentsan/Features";
 // import Footer from "./componentsan/Footer";
 // import Navbar from "./componentsan/Navbar";
-import Services from "./Components/Services/services"
+import Services from "./Components/Services/Services"
 import LoginPage from "./Components/Login/Login";
 import RegisterPage from "./Components/Register/Register";
 import SignUp from "./Components/SignUp/SignUp";
 import Profile from "./Components/Profile/Profile";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Components/ResetPassword/ResetPassword";
-import AboutUs from "./Components/AboutUs/Aboutus";
+import AboutUs from "./Components/AboutUs/Aboutus"
+import Footer from "./Components/Footer/Footer";
 
 // Register GSAP ScrollTo Plugin
 gsap.registerPlugin(ScrollToPlugin);
@@ -43,6 +44,7 @@ function App() {
   
     
         </Routes>
+        <Footer/>
       </BrowserRouter>
     </>
   );

@@ -19,7 +19,6 @@ export default function Home() {
       {/* <SplineScene /> */}
       <CreativeShowcase />
       {/* <CreativeInspirations /> */}
-      <Footer />
       {/* <MarketPlace/> */}
     </>
   );
