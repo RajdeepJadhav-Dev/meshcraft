@@ -4,14 +4,9 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { gsap } from "gsap";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MarketPlace from '../src/Components/MarketPlace/MarketPlace'
-import Navbar from "../src/Components/Navbar/Navbar";
-// import LoginPage from "./Components/loginPage/LoginPage";
-// import CreativeShowcase from "./componentsan/CreativeShowcase";
-// import FeaturedCollections from "./componentsan/FeaturedCollections";
-// import Features from "./componentsan/Features";
-// import Footer from "./componentsan/Footer";
-// import Navbar from "./componentsan/Navbar";
-import Services from "./Components/Services/Services"
+
+import Navbar from "./Components/Navbar/Navbar";
+import Services from "./Components/Services/services"
 import LoginPage from "./Components/Login/Login";
 import RegisterPage from "./Components/Register/Register";
 import SignUp from "./Components/SignUp/SignUp";
@@ -21,7 +16,6 @@ import ResetPassword from "./Components/ResetPassword/ResetPassword";
 import AboutUs from "./Components/AboutUs/Aboutus"
 import Footer from "./Components/Footer/Footer";
 
-// Register GSAP ScrollTo Plugin
 gsap.registerPlugin(ScrollToPlugin);
 function App() {
   return (
