@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@netlify/functions": "^3.0.0",
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.17.10",
     "@splinetool/react-spline": "^4.0.0",
