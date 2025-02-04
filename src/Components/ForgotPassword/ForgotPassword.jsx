@@ -43,7 +43,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      await axios.post("/api/forgot-password", { email });
+      await axios.post("/.netlify/functions/forgot-password", { email });
       setSuccess(true);
       setError("");
     } catch (err) {
