@@ -11,7 +11,7 @@
     "express": "^4.21.2",
     "framer-motion": "^11.16.0",
     "gsap": "^3.12.5",
-    "mongoose": "^8.9.5",
+    "mongoose": "^8.9.7",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
@@ -20,6 +20,7 @@
     "react-icons": "^4.3.1",
     "react-router-dom": "^7.0.2",
     "react-scripts": "^5.0.1",
+    "serverless-http": "^3.2.0",
     "three": "^0.171.0",
     "three.js": "^0.77.1",
     "web-vitals": "^4.2.4"

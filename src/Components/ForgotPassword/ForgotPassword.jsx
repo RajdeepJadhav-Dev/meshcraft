@@ -43,7 +43,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      await axios.post("https://meshcraft-1.onrender.com/forgot-password", { email });
+      await axios.post("/api/forgot-password", { email });
       setSuccess(true);
       setError("");
     } catch (err) {

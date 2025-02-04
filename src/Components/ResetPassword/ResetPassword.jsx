@@ -59,7 +59,7 @@ export default function ResetPassword() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`https://meshcraft-1.onrender.com/reset-password`, {
+      await axios.post(`/api/reset-password`, {
         userId,
         token,
         newPassword,

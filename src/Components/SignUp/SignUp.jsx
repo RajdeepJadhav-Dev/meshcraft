@@ -106,7 +106,7 @@ export default function SignUp() {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("https://meshcraft-1.onrender.com/register", formData);
+      const response = await axios.post("/api/register", formData);
       // console.log(response.data);
       setIsLoginForm(true);
       setFormData({
@@ -143,7 +143,7 @@ const handleLogin = async (e) => {
   if (!validateForm()) return;
 
   try {
-    const response = await axios.post("https://meshcraft-1.onrender.com/login", formData);
+    const response = await axios.post("/api/login", formData);
     console.log("Login Response:", response.data);
     localStorage.setItem("user", JSON.stringify(response.data));
 

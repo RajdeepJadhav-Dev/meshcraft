@@ -114,7 +114,7 @@ const Profile = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch("https://meshcraft-1.onrender.com/update-username", {
+      const response = await fetch("/api/update-username", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user._id, username }),
@@ -149,7 +149,7 @@ const Profile = () => {
     // Proceed with API call
     try {
         setIsLoading(true);
-        const response = await fetch("https://meshcraft-1.onrender.com/update-password", {
+        const response = await fetch("/api/update-password", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -188,7 +188,7 @@ const Profile = () => {
       formData.append("userId", user._id);
 
       try {
-        const response = await fetch("https://meshcraft-1.onrender.com/update-profile-picture", {
+        const response = await fetch("/api/update-profile-picture", {
           method: "PUT",
           body: formData,
         });
@@ -377,7 +377,7 @@ const Profile = () => {
     <button
       onClick={() => {
         const userId = user?._id;
-        window.location.href = `https://meshcraft-1.onrender.com/auth/discord?userId=${userId}`;
+        window.location.href = `/api/auth/discord?userId=${userId}`;
       }}
       className="bg-blue-600 text-white rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-blue-700"
     >
