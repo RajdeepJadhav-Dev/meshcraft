@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { MongoClient } = require('mongodb');
+
 exports.handler = async function (event, context) {
   const { code, state } = event.queryStringParameters;
 

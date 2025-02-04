@@ -1,5 +1,5 @@
 const connectDB = require('../utils/db');
-const UserSchema = require('.../models/user');
+const UserSchema = require('../models/user');
 
 exports.handler = async (event) => {
     await connectDB();
