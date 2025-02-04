@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const UserSchema = require('./models/User');
+const UserSchema = require('../models/user');
 
 mongoose.connect(process.env.MONGODB_URI);
 

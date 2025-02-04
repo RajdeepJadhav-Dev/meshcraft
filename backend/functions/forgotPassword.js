@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const UserSchema = require('./models/User');
+const UserSchema = require('../models/user');
 
 mongoose.connect(process.env.MONGODB_URI);
 

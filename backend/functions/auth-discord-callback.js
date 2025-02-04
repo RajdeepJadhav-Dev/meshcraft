@@ -1,7 +1,5 @@
-// netlify/functions/auth-discord-callback.js
 const axios = require('axios');
 const { MongoClient } = require('mongodb');
-
 exports.handler = async function (event, context) {
   const { code, state } = event.queryStringParameters;
 
@@ -42,7 +40,6 @@ exports.handler = async function (event, context) {
     const discordUser = userResponse.data;
     const avatarUrl = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
 
-    // Connect to your MongoDB (you can use your existing connection string)
     const client = new MongoClient(process.env.MONGODB_URI);
     await client.connect();
     const db = client.db();

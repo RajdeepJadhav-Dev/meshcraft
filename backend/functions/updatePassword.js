@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const UserSchema = require('./models/User');  // Adjust the path based on your project structure
+const UserSchema = require('../models/user');  // Adjust the path based on your project structure
 
 mongoose.connect(process.env.MONGODB_URI);
 

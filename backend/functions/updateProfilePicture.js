@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserSchema = require('./models/User');  // Adjust path accordingly
+const UserSchema = require('../models/user');  // Adjust path accordingly
 
 mongoose.connect(process.env.MONGODB_URI);
 
