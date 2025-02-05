@@ -1,10 +1,9 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UserSchema = require('../models/user');
-
-mongoose.connect(process.env.MONGODB_URI);
+const connectDB = require('../utils/db');
 
 exports.handler = async (event) => {
+    await connectDB();
     try {
         const { userId, token, newPassword } = JSON.parse(event.body);
 

@@ -146,7 +146,6 @@ const Profile = () => {
 
 
 
-    // Proceed with API call
     try {
         setIsLoading(true);
         const response = await fetch("/.netlify/functions/updatePassword", {
@@ -359,7 +358,6 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Connect Discord Section */}
         <div>
   <h2 className="text-lg font-semibold text-gray-200 mb-4">Discord</h2>
   {user?.discordId ? (

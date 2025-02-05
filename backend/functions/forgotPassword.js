@@ -1,12 +1,11 @@
-const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const UserSchema = require('../models/user');
-
-mongoose.connect(process.env.MONGODB_URI);
+const connectDB = require('../utils/db');
 
 exports.handler = async (event) => {
+    await connectDB();
     try {
         const { email } = JSON.parse(event.body);
 

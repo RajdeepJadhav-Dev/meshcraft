@@ -100,7 +100,6 @@ app.put('/update-username', async (req, res) => {
 });
 
 
-// Update password endpoint
 app.put('/update-password', async (req, res) => {
     try {
         const { oldPassword, newPassword, userId } = req.body;

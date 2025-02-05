@@ -15,22 +15,6 @@ exports.handler = async (event) => {
             };
         }
 
-        const user = await UserSchema.findById(userId);
-        if (!user) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify("User not found")
-            };
-        }
-
-        const isMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isMatch) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify("Old password is incorrect")
-            };
-        }
-
         if(oldPassword === newPassword) {
             return {
                 statusCode: 400,
@@ -40,12 +24,29 @@ exports.handler = async (event) => {
 
         const salt = await bcrypt.genSalt(10);
         const hashedNewPassword = await bcrypt.hash(newPassword, salt);
-        user.password = hashedNewPassword;
-        await user.save();
+        const updatedUser= await UserSchema.findByIdAndUpdate(
+            userId,
+            { password: hashedNewPassword },
+            { new: true }
+        );
+        if(!updatedUser) {
+            return {
+                statusCode: 404,
+                body: JSON.stringify("User not found")
+
+            };
+        }
+
 
         return {
             statusCode: 200,
-            body: JSON.stringify("Password updated successfully")
+            body: JSON.stringify({
+                message: "Password updated successfully",
+                user: updatedUser
+            }
+            )
+
+
         };
     } catch (err) {
         console.error(err);
