@@ -39,7 +39,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(5);
         const hashedNewPassword = await bcrypt.hash(newPassword, salt);
 
         user.password = hashedNewPassword;

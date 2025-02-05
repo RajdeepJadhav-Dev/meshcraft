@@ -5,7 +5,7 @@ import image3 from "./TAS.jpg";
 import image4 from "./REN.png";
 import image5 from "./UV.png";
 import image6 from "./GAO.png";
-
+ 
 const services = [
   {
     title: "Digital Marketing",
@@ -44,11 +44,11 @@ const services = [
     image: image6,
   },
 ];
-
+ 
 const software = [
   {
     name: "Blender",
-    logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtYQuQpe6QIJGF5dKUfyJSH3GDCUbU1ria0A&s",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Blender_logo_no_text.svg/768px-Blender_logo_no_text.svg.png?20210507122249",
   },
   {
     name: "Unity",
@@ -72,7 +72,7 @@ const software = [
   },
 ];
  
-
+ 
 const Services = () => {
   return (
     <div className="min-h-screen p-8 bg-[#000000] text-white">
@@ -85,14 +85,14 @@ const Services = () => {
         Delivering industry-leading 3D solutions tailored to your needs.
       </p>
     </header>
-
+ 
     {/* Services Grid */}
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 animate-[slide-up_1s_ease-in-out]">
       {services.map((service, index) => (
         <div
           key={index}
-          className="bg-[#282828] shadow-[0_4px_10px_rgba(0,0,0,0.5)] rounded-lg p-6 
-                   hover:shadow-[0_8px_20px_rgba(255,94,0,0.7)] transition-all duration-300 
+          className="bg-[#282828] shadow-[0_4px_10px_rgba(0,0,0,0.5)] rounded-lg p-6
+                   hover:shadow-[0_8px_20px_rgba(255,94,0,0.7)] transition-all duration-300
                    hover:-translate-y-2"
         >
           <img
@@ -125,7 +125,7 @@ const Services = () => {
     ))}
   </ul>
 </section>
-
+ 
 {/* Contact Card */}
 <section className="mt-16 bg-[#282828] p-8 rounded-lg shadow-[0_4px_10px_rgba(0,0,0,0.5)] animate-fade-in">
   <h2 className="text-2xl font-bold text-white mb-4 text-center">
@@ -183,10 +183,10 @@ const Services = () => {
     </form>
   </div>
 </section>
-
+ 
      
     </div>
   );
 };
-
+ 
 export default Services;
