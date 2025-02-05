@@ -39,8 +39,7 @@ app.post('/register', async (req, res) => {
         res.status(200).json(user);
     } catch (err) {
         if (err.code === 11000) {
-            // Handle duplicate key error
-            const field = Object.keys(err.keyValue)[0]; // Get the duplicate field
+            const field = Object.keys(err.keyValue)[0];
             return res.status(400).json({ error: `${field} already exists` });
         }
         console.error("Error during registration:", err);
@@ -52,8 +51,7 @@ app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         app.post('/login', async (req, res) => {
-            console.log("Login Request Body:", req.body);  // Debugging line
-            // Your existing login logic
+            console.log("Login Request Body:", req.body); 
         });
         const user = await UserSchema
             .findOne({ username });
@@ -71,7 +69,6 @@ app.post('/login', async (req, res) => {
 }
 );
 
-// Update username endpoint
 app.put('/update-username', async (req, res) => {
     try {
         const { username, userId } = req.body;
@@ -128,7 +125,7 @@ app.put('/update-password', async (req, res) => {
 });
 
 
-const upload = multer({ storage: multer.memoryStorage() }); // Store files in memory
+const upload = multer({ storage: multer.memoryStorage() }); 
 
 app.put('/update-profile-picture', upload.single('profilePicture'), async (req, res) => {
     try {
@@ -160,7 +157,7 @@ app.put('/update-profile-picture', upload.single('profilePicture'), async (req, 
             user: updatedUser,
         });
     } catch (err) {
-        console.error("Error:", err);  // Added debug line
+        console.error("Error:", err);  
         res.status(500).json("Error updating profile picture");
     }
 });
@@ -169,22 +166,18 @@ app.post('/forgot-password', async (req, res) => {
     try {
         const { email } = req.body;
 
-        // Find the user by email
         const user = await UserSchema.findOne({ email });
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        // Generate reset token and hash it
         const resetToken = crypto.randomBytes(20).toString('hex');
         const hash = await bcrypt.hash(resetToken, 10);
 
-        // Update the user's reset token and expiry in the database
         user.resetPasswordToken = hash;
         user.resetPasswordExpires = Date.now() + 3600000; 
         await user.save();
 
-        // Define reset URL and email content
         const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
         const resetUrl = `${frontendUrl}/reset-password/${user._id}/${resetToken}`;
         const htmlContent = `
@@ -197,7 +190,6 @@ app.post('/forgot-password', async (req, res) => {
             </div>
         `;
 
-        // Send the email using nodemailer with app password
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -289,7 +281,6 @@ app.get("/auth/discord", (req, res) => {
     }
   
     try {
-      // Exchange code for an access token
       const tokenResponse = await axios.post(
         "https://discord.com/api/oauth2/token",
         new URLSearchParams({
@@ -308,7 +299,6 @@ app.get("/auth/discord", (req, res) => {
   
       const { access_token } = tokenResponse.data;
   
-      // Use the access token to get user info
       const userResponse = await axios.get("https://discord.com/api/users/@me", {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -319,7 +309,6 @@ app.get("/auth/discord", (req, res) => {
       const avatarUrl = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
 
   
-      // Update the user's Discord ID in the database
       const userId = state;
       const user = await UserSchema.findByIdAndUpdate(
         userId,
