@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const UserSchema = require('../models/user');  // Adjust the path based on your project structure
+const UserSchema = require('../models/user'); 
+const connectDB = require('../utils/db');
 
-mongoose.connect(process.env.MONGODB_URI);
 
 exports.handler = async (event) => {
+    await connectDB();
     try {
         const { oldPassword, newPassword, userId } = JSON.parse(event.body);
 
@@ -28,6 +28,13 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 body: JSON.stringify("Old password is incorrect")
+            };
+        }
+
+        if(oldPassword === newPassword) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify("New password must be different from old password")
             };
         }
 

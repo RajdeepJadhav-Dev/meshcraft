@@ -1,7 +1,12 @@
 const axios = require('axios');
-const { MongoClient } = require('mongodb');
+const connectDB = require('../utils/db');
+const UserSchema = require('../models/user');
+
 
 exports.handler = async function (event, context) {
+   await connectDB();
+   
+
   const { code, state } = event.queryStringParameters;
 
   if (!code) {
@@ -41,24 +46,15 @@ exports.handler = async function (event, context) {
     const discordUser = userResponse.data;
     const avatarUrl = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
 
-    const client = new MongoClient(process.env.MONGODB_URI);
-    await client.connect();
-    const db = client.db();
-    const usersCollection = db.collection("users");
-
-    const user = await usersCollection.findOneAndUpdate(
-      { _id: state },
-      {
-        $set: {
-          discordId: discordUser.id,
-          discordUsername: discordUser.username,
-          discordAvatar: avatarUrl,
-        },
-      },
-      { returnDocument: "after" }
+   
+    const userId=state;
+    const updatedUser = await UserSchema.findByIdAndUpdate(
+      userId,
+      { discordId: discordUser.id, discordUsername: `${discordUser.username}`, discordAvatar: avatarUrl },
+      { new: true }
     );
 
-    if (!user.value) {
+    if (!updatedUser) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: "User not found" }),
