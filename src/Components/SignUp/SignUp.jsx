@@ -107,7 +107,6 @@ export default function SignUp() {
 
     try {
       const response = await axios.post("/.netlify/functions/register", formData);
-      // console.log(response.data);
       setIsLoginForm(true);
       setFormData({
         username: "",

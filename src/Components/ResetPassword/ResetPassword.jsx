@@ -59,7 +59,7 @@ export default function ResetPassword() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`/.netlify/functions/reset-password`, {
+      await axios.post(`/.netlify/functions/resetPassword`, {
         userId,
         token,
         newPassword,
