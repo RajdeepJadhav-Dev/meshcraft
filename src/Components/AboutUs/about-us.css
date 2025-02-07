@@ -242,10 +242,20 @@
     to { transform: translateX(-33.33%); }
   }
   
-  /* Responsive Design */
+
+
   @media (max-width: 768px) {
     .meshcraft-title {
-      font-size: 50px;
+      font-size: 40px; /* Further reduced for small screens */
+    }
+  
+    .inner-box {
+      padding: 20px; /* Reduced padding for smaller screens */
+    }
+  
+    .description {
+      font-size: 16px;
+      padding: 0 5px;
     }
   
     .team-section {
@@ -273,12 +283,10 @@
     }
   
     .main-content {
-      padding: 40px 20px;
+      padding: 40px 25px; 
     }
-  
-    .description {
-      font-size: 16px;
-      padding: 0 20px;
+    @keyframes slowMarquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-66.6%); }
     }
   }
-  

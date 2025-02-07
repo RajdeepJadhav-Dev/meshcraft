@@ -112,14 +112,14 @@ const Services = () => {
   <p className="text-[#c1c1c1] mb-4">
     MeshCraft's team is proficient with industry-standard tools:
   </p>
-  <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
+  <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-[90%] mx-auto">
     {software.map((tool, index) => (
       <li key={index} className="flex items-center space-x-4 p-3 bg-[#1a1a1a] rounded-lg">
         <img
-          src={tool.logo}
-          alt={tool.name}
-          className="w-10 h-10 rounded"
-        />
+  src={tool.logo}
+  alt={tool.name}
+  className="w-10 h-10 rounded object-contain"
+/>
         <span className="text-white font-medium">{tool.name}</span>
       </li>
     ))}
