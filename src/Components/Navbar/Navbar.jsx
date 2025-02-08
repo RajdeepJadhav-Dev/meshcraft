@@ -124,10 +124,9 @@ export default function Navbar() {
               )}
               {dropdownOpen && (
                 <div
-                  className="absolute top-16 right-4 w-32 
-                    backdrop-filter backdrop-blur-lg bg-opacity-30 bg-gray-800 
-                    border border-gray-200/20 rounded-md shadow-lg 
-                    transition-all duration-300"
+                  className="absolute top-16 right-0 bg-gray-900 shadow-lg rounded-lg p-4"
+                  onClick={() => setDropdownOpen(false)}
+                  
 
                 >
                   <ul className="flex flex-col items-center">

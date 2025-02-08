@@ -174,9 +174,7 @@ const handleLogin = async (e) => {
   }`}
 >
     <div className="flipper relative max-w-md sm:max-w-4xl h-auto sm:h-[600px] bg-gray-800 rounded-lg shadow-2xl">
-      {/* Front - Login */}
       <div className="front flex flex-col sm:flex-row w-full h-full group relative">
-        {/* Image Section */}
         <div className="hidden sm:flex items-center justify-center w-full sm:w-1/2 bg-gradient-to-l to-gray-900 from-slate-900 rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none">
           <img
             src={login}
@@ -185,7 +183,6 @@ const handleLogin = async (e) => {
           />
         </div>
 
-        {/* Form Section */}
         <div className="flex flex-col justify-center w-full sm:w-1/2 px-4 sm:px-8 py-2 sm:py-0 bg-gray-800 rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none">
           <h2 className="text-center text-2xl sm:text-3xl font-bold text-white mb-4">
             Login
@@ -240,9 +237,7 @@ const handleLogin = async (e) => {
         </div>
       </div>
 
-      {/* Back - Register */}
       <div className="back flex flex-col sm:flex-row w-full h-full group relative">
-        {/* Form Section */}
         <div className="flex flex-col justify-center w-full sm:w-1/2 px-4 sm:px-8 py-8 sm:py-0 bg-gray-800 rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none">
           <h2 className="text-center text-2xl sm:text-3xl font-bold text-white mb-4">
             Register
@@ -300,7 +295,6 @@ const handleLogin = async (e) => {
           </div>
         </div>
 
-        {/* Image Section */}
         <div className="hidden sm:flex items-center justify-center w-full sm:w-1/2 bg-gradient-to-l to-gray-900 from-slate-900 rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none">
           <img
             src={register}

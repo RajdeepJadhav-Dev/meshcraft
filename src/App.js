@@ -7,8 +7,6 @@ import MarketPlace from '../src/Components/MarketPlace/MarketPlace'
 
 import Navbar from "./Components/Navbar/Navbar";
 import Services from "./Components/Services/services"
-import LoginPage from "./Components/Login/Login";
-import RegisterPage from "./Components/Register/Register";
 import SignUp from "./Components/SignUp/SignUp";
 import Profile from "./Components/Profile/Profile";
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
@@ -28,8 +26,6 @@ function App() {
 
           <Route path="/services" element={<Services/>}></Route>
           <Route path="/marketplace" element={<MarketPlace/>}></Route>
-          <Route path="/login" element={<LoginPage/>}></Route>
-          <Route path="/register" element={<RegisterPage/>}></Route>
           <Route path="/signup" element={<SignUp/>}></Route>
           <Route path= "/profile" element={<Profile/>}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword/>}></Route>

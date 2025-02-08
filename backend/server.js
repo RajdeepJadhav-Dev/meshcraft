@@ -333,11 +333,4 @@ app.get("/auth/discord", (req, res) => {
     }
   });
 
-
-
-
-
-
-
-
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
