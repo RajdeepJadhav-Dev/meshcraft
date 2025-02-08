@@ -239,14 +239,14 @@
   
   @keyframes slowMarquee {
     from { transform: translateX(0); }
-    to { transform: translateX(-33.33%); }
+    to { transform: translateX(-100%); }
   }
   
 
 
   @media (max-width: 768px) {
     .meshcraft-title {
-      font-size: 40px; /* Further reduced for small screens */
+      font-size: 30px; /* Further reduced for small screens */
     }
   
     .inner-box {
@@ -287,6 +287,24 @@
     }
     @keyframes slowMarquee {
       from { transform: translateX(0); }
-      to { transform: translateX(-66.6%); }
+      to { transform: translateX(-200%); }
     }
+    .circle {
+      width: 10px;
+      height: 10px;
+      background-color: #1b1b1b;
+      border-radius: 50%;
+    }
+    .circle-group{
+      top: 5px;
+      left: 10px;
+    }
+  }
+
+  @media (max-width: 400px){
+    @keyframes slowMarquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-400%); }
+    }
+
   }

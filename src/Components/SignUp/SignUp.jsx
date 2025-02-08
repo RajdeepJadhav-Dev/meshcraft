@@ -143,10 +143,8 @@ const handleLogin = async (e) => {
 
   try {
     const response = await axios.post("/.netlify/functions/login", formData);
-    console.log("Login Response:", response.data);
     localStorage.setItem("user", JSON.stringify(response.data));
 
-    // Verify localStorage data
     const user = JSON.parse(localStorage.getItem("user"));
     console.log("Stored User Data:", user);
 
@@ -169,165 +167,152 @@ const handleLogin = async (e) => {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+<div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-8">
+<div
+  className={`flip-container flex items-center justify-center perspective mt-14 ${
+    isLoginForm ? "" : "flipped"
+  }`}
+>
+    <div className="flipper relative max-w-md sm:max-w-4xl h-auto sm:h-[600px] bg-gray-800 rounded-lg shadow-2xl">
+      {/* Front - Login */}
+      <div className="front flex flex-col sm:flex-row w-full h-full group relative">
+        {/* Image Section */}
+        <div className="hidden sm:flex items-center justify-center w-full sm:w-1/2 bg-gradient-to-l to-gray-900 from-slate-900 rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none">
+          <img
+            src={login}
+            alt="Login"
+            className="w-[70%] sm:w-[80%] h-auto rounded-lg"
+          />
+        </div>
 
-      <div
-        className={`flip-container perspective mt-14 ml-[20%] ${
-          isLoginForm ? "" : "flipped"
-        }`}
-      >
-        
-        <div className="flipper relative w-[90%] max-w-4xl h-[650px] bg-gray-800 rounded-lg shadow-2xl">
-          
-<div className="front flex w-full h-full group relative">
-  <div className="absolute inset-0 border-gray-700 rounded-lg transition-opacity duration-500 opacity-100 group-hover:opacity-100 pointer-events-none">
-  <span className="absolute inset-x-0 top-0 h-[1px] bg-gray-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
-  <span className="absolute inset-y-0 right-0 w-[1px] bg-gray-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top"></span>
-  <span className="absolute inset-x-0 bottom-0 h-[1px] bg-gray-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></span>
-  <span className="absolute inset-y-0 left-0 w-[1px] bg-gray-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-bottom"></span>
-</div>
-
-  {/* Image Section */}
-  <div className="flex w-1/2 items-center justify-center bg-gradient-to-l to-gray-900 from-slate-900
-   rounded-l-lg">
- <div className="image-section">
-                <img
-                  src={login}
-                  alt="Login"
-                  className="w-[80%] h-auto rounded-lg"
-                />
-              </div> 
-               </div>
-
-  {/* Form Section */}
-  <div className="w-1/2 flex flex-col justify-center px-8 bg-gray-800 rounded-r-lg">
-    <h2 className="text-center text-3xl font-bold text-white mb-2">Login</h2>
-    <p className="text-center text-gray-400 mb-6">
-      Welcome back! Please log in to your account.
-    </p>
-    <form className="space-y-6" method="POST">
-      <Input
-        id="username"
-        label="Username"
-        type="text"
-        autoComplete="username"
-        value={formData.username}
-        onChange={handleChange}
-        icon={<FaUser />}
-        error={errors.username}
-      />
-
-      <Input
-        id="password"
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-        value={formData.password}
-        onChange={handleChange}
-        icon={<FaLock />}
-        error={errors.password}
-      />
-      <button className="w-full py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition focus:outline-none focus:ring-2 focus:ring-blue-500" onClick={handleLogin}>
-        Login
-      </button>
-    </form>
-    <p className="text-center text-sm text-gray-400 mt-4">
-      Forgot your password?{" "}
-      <a href="/forgotpassword" className="text-blue-500 hover:underline">
-        Click here
-      </a>
-    </p>
-    <div className="flex items-center justify-center mt-4">
-      <p className="text-sm text-gray-400">Don't have an account?</p>
-      <button
-        type="button"
-        onClick={handleToggleForm}
-        className="ml-2 text-sm text-blue-600 hover:underline"
-      >
-        Register here
-      </button>
-    </div>
-  </div>
-</div>
-
-          <div className="back flex w-full h-full group relative">
-          <div className="absolute inset-0 border-gray-700 rounded-lg transition-opacity duration-500 opacity-100 group-hover:opacity-100 pointer-events-none">
-  <span className="absolute inset-x-0 top-0 h-[1px] bg-gray-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></span>
-  <span className="absolute inset-y-0 right-0 w-[1px] bg-gray-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top"></span>
-  <span className="absolute inset-x-0 bottom-0 h-[1px] bg-gray-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-right"></span>
-  <span className="absolute inset-y-0 left-0 w-[1px] bg-gray-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-bottom"></span>
-</div>
-            {/* Left Section */}
-            <div className="w-1/2 flex flex-col justify-center px-8 bg-gray-800 rounded-l-lg">
-              <h2 className="text-center text-3xl font-bold text-white mb-2">
-                Register
-              </h2>
-              <p className="text-center text-gray-400 mb-6">
-                Join us today and explore amazing models!
-              </p>
-              <form className="space-y-6" method="POST">
-                <Input
-                  id="username"
-                  label="Username"
-                  type="text"
-                  autoComplete="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  icon={<FaUser />}
-                  error={errors.username}
-                />
-                <Input
-                  id="email"
-                  label="Email address"
-                  type="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  icon={<FaEnvelope />}
-                  error={errors.email}
-                />
-                <Input
-                  id="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  icon={<FaLock />}
-                  error={errors.password}
-                />
-                <button className="w-full py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-lg transition focus:outline-none focus:ring-2 focus:ring-green-500" onClick={handleRegister}>
-                  Register
-                </button>
-              </form>
-
-              <div className="flex items-center justify-center mt-4">
-              <p className="text-sm text-gray-400">Already have an account?</p>
-              <button
-                type="button"
-                onClick={handleToggleForm}
-                className="ml-2 text-sm text-green-500 hover:underline"
-              >
-                Login here
-              </button>
-              
-              </div>
-            </div>
-
-            {/* Right Section */}
-            <div className="w-1/2 flex items-center justify-center bg-gradient-to-l to-gray-900 from-slate-900 rounded-r-lg">
-
-              <div className="image-section">
-                <img
-                  src={register}
-                  alt="Register"
-                  className="w-[80%] h-auto rounded-lg"
-                />
-              </div>
-            </div>
+        {/* Form Section */}
+        <div className="flex flex-col justify-center w-full sm:w-1/2 px-4 sm:px-8 py-2 sm:py-0 bg-gray-800 rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-white mb-4">
+            Login
+          </h2>
+          <p className="text-center text-gray-400 text-sm sm:text-base mb-6">
+            Welcome back! Please log in to your account.
+          </p>
+          <form className="space-y-4 sm:space-y-6">
+            <Input
+              id="username"
+              label="Username"
+              type="text"
+              autoComplete="username"
+              value={formData.username}
+              onChange={handleChange}
+              icon={<FaUser />}
+              error={errors.username}
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
+              icon={<FaLock />}
+              error={errors.password}
+            />
+            <button
+              className="w-full py-2 sm:py-3 text-sm sm:text-base text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleLogin}
+            >
+              Login
+            </button>
+          </form>
+          <p className="text-center text-sm text-gray-400 mt-4">
+            Forgot your password?{" "}
+            <a href="/forgotpassword" className="text-blue-500 hover:underline">
+              Click here
+            </a>
+          </p>
+          <div className="flex items-center justify-center mt-4">
+            <p className="text-sm text-gray-400">Don't have an account?</p>
+            <button
+              type="button"
+              onClick={handleToggleForm}
+              className="ml-2 text-sm text-blue-600 hover:underline"
+            >
+              Register here
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Back - Register */}
+      <div className="back flex flex-col sm:flex-row w-full h-full group relative">
+        {/* Form Section */}
+        <div className="flex flex-col justify-center w-full sm:w-1/2 px-4 sm:px-8 py-8 sm:py-0 bg-gray-800 rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-white mb-4">
+            Register
+          </h2>
+          <p className="text-center text-gray-400 text-sm sm:text-base mb-6">
+            Join us today and explore amazing models!
+          </p>
+          <form className="space-y-4 sm:space-y-6">
+            <Input
+              id="username"
+              label="Username"
+              type="text"
+              autoComplete="username"
+              value={formData.username}
+              onChange={handleChange}
+              icon={<FaUser />}
+              error={errors.username}
+            />
+            <Input
+              id="email"
+              label="Email address"
+              type="email"
+              autoComplete="email"
+              value={formData.email}
+              onChange={handleChange}
+              icon={<FaEnvelope />}
+              error={errors.email}
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
+              icon={<FaLock />}
+              error={errors.password}
+            />
+            <button
+              className="w-full py-2 sm:py-3 text-sm sm:text-base text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-lg transition focus:outline-none focus:ring-2 focus:ring-green-500"
+              onClick={handleRegister}
+            >
+              Register
+            </button>
+          </form>
+          <div className="flex items-center justify-center mt-4">
+            <p className="text-sm text-gray-400">Already have an account?</p>
+            <button
+              type="button"
+              onClick={handleToggleForm}
+              className="ml-2 text-sm text-green-500 hover:underline"
+            >
+              Login here
+            </button>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="hidden sm:flex items-center justify-center w-full sm:w-1/2 bg-gradient-to-l to-gray-900 from-slate-900 rounded-b-lg sm:rounded-r-lg sm:rounded-bl-none">
+          <img
+            src={register}
+            alt="Register"
+            className="w-[70%] sm:w-[80%] h-auto rounded-lg"
+          />
+        </div>
+      </div>
+  </div>
+</div>
     </div>
+
+  
   );
 }

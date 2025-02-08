@@ -9,7 +9,6 @@ import logo from "../../assets/logo/Horizontalwithbgsmall.png";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  let navbarRef = useRef(null);
 
   let [isOpenNav, setIsOpenNav] = useState(false);
   const [user, setUser] = useState(null);
@@ -62,9 +61,9 @@ export default function Navbar() {
   <div
     className={`fixed top-16 left-0 w-full bg-gray-900 shadow-lg transition-all duration-300 transform z-40
       ${
-        isOpenNav
-          ? "translate-y-0 opacity-100 visible"
-          : "-translate-y-full opacity-0 invisible"
+        !isOpenNav?
+        "-translate-y-full opacity-0 invisible"
+        :"translate-y-0 opacity-100 visible"
       } 
       md:relative md:translate-y-0 md:opacity-100 md:visible md:bg-transparent md:shadow-none md:top-auto md:left-auto md:w-auto md:flex md:items-center py-2`}
   >
