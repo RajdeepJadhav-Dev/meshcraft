@@ -62,7 +62,17 @@ module.exports = {
             opacity: '1',
             transform: 'translateY(0)'
           },
-        }
+        },
+        gradient: {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          },
+        },
       },
       animation: {
         spin: "slowspin 3s linear infinite", 
@@ -70,7 +80,10 @@ module.exports = {
         float: "float 3s ease-in-out infinite",
         slowMarquee: 'slowMarquee 40s linear infinite',
         fadeIn: 'fadeIn 2.5s ease-in-out',
+        gradient: 'gradient 2s ease-in-out',
+
       },
+     
     },
   },
   plugins: [],

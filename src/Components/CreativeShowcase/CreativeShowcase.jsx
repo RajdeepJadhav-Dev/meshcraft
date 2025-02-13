@@ -123,13 +123,10 @@ const CreativeShowcase = () => {
   return (
     <section className="bg-black py-16">
       <div className="container mx-auto px-8">
-        <h2 className="text-3xl text-center text-white mb-8">Creative Showcase</h2>
-        <p className="text-center text-gray-400 mb-12">
-          Check out how our community is using our products creatively!
-        </p>
-
-        {/* Showcase Items */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+        Creative Showcase
+        </h2>
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {showcaseItems.map((item, index) => (
             <div
               key={index}

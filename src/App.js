@@ -3,8 +3,8 @@ import Home from "../src/page";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { gsap } from "gsap";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import MarketPlace from '../src/Components/MarketPlace/MarketPlace'
-
+import MarketPlace from './Components/MarketPlace/MarketPlace'
+import AssetDetailPage from "./Components/MarketPlace/MarketPlace";
 import Navbar from "./Components/Navbar/Navbar";
 import Services from "./Components/Services/services"
 import SignUp from "./Components/SignUp/SignUp";
@@ -25,7 +25,7 @@ function App() {
           
 
           <Route path="/services" element={<Services/>}></Route>
-          <Route path="/marketplace" element={<MarketPlace/>}></Route>
+          <Route path="/marketplace" element={<AssetDetailPage/>}></Route>
           <Route path="/signup" element={<SignUp/>}></Route>
           <Route path= "/profile" element={<Profile/>}></Route>
           <Route path="/forgotpassword" element={<ForgotPassword/>}></Route>
