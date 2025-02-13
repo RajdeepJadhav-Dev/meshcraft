@@ -7,7 +7,6 @@ import unity from "../../assets/SoftwareLogo/Unity3D.png";
 import unrealEngine from "../../assets/SoftwareLogo/UnrealEngine.png";
 import santer from "../../assets/SoftwareLogo/Santer.png";
 
-
 const Model = ({ modelUrl }) => {
   const { scene } = useGLTF(modelUrl);
   const modelRef = useRef();
@@ -50,7 +49,6 @@ const Sidebar = ({ assets, onAssetClick }) => {
   );
 };
 
-
 const FullscreenCard = ({ model, onClose, assets, onAssetClick }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 text-white">
@@ -87,6 +85,7 @@ const FullscreenCard = ({ model, onClose, assets, onAssetClick }) => {
 
 const CreativeShowcase = () => {
   const [selectedModel, setSelectedModel] = useState(null);
+  const [loadedModels, setLoadedModels] = useState({});
 
   const showcaseItems = [
     {
@@ -100,20 +99,22 @@ const CreativeShowcase = () => {
       title: "Furry Felix Short Film",
       description: "A short film showcasing the lovable Furry Felix.",
       modelUrl: "/3dfiles/Hydroaptor.gltf",
-      thumbnail: "/thumbnails/felix.png",
+      thumbnail: "/thumbnails/furry-felix.png",
       softwareLogo: maya,
     },
     {
       title: "Lion Cub Illustration",
       description: "An illustration inspired by our Lion Cub model.",
       modelUrl: "/3dfiles/Archery.gltf",
-      thumbnail: "/thumbnails/lion.png",
+      thumbnail: "/thumbnails/Lion.png",
       softwareLogo: unity,
     },
   ];
 
   const handleCardClick = (item) => {
     setSelectedModel(item);
+    // Mark the model as loaded when clicked
+    setLoadedModels((prev) => ({ ...prev, [item.modelUrl]: true }));
   };
 
   const closeModal = () => {
@@ -123,10 +124,10 @@ const CreativeShowcase = () => {
   return (
     <section className="bg-black py-16">
       <div className="container mx-auto px-8">
-      <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-        Creative Showcase
+        <h2 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          Creative Showcase
         </h2>
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {showcaseItems.map((item, index) => (
             <div
               key={index}
@@ -134,14 +135,24 @@ const CreativeShowcase = () => {
               className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
             >
               <div className="relative w-full h-48 bg-gray-900">
-                <Canvas>
-                  <ambientLight intensity={0.5} />
-                  <spotLight position={[10, 10, 10]} />
-                  <Suspense fallback={null}>
-                    <Model modelUrl={item.modelUrl} />
-                  </Suspense>
-                  <OrbitControls />
-                </Canvas>
+                {loadedModels[item.modelUrl] ? (
+                  <Canvas>
+                    <ambientLight intensity={0.5} />
+                    <spotLight position={[10, 10, 10]} />
+                    <Suspense fallback={null}>
+                      <Model modelUrl={item.modelUrl} />
+                    </Suspense>
+                    <OrbitControls />
+                  </Canvas>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <img
+                      src={item.thumbnail}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-white">{item.title}</h3>
