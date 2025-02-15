@@ -4,7 +4,7 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { gsap } from "gsap";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MarketPlace from './Components/MarketPlace/MarketPlace'
-import AssetDetailPage from "./Components/MarketPlace/MarketPlace";
+import AssetDetailPage from "./Components/Assets/Assets";
 import Navbar from "./Components/Navbar/Navbar";
 import Services from "./Components/Services/services"
 import SignUp from "./Components/SignUp/SignUp";
@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>}></Route>
           
-
+          <Route path="/asset/:id" element={<AssetDetailPage/>}></Route>
           <Route path="/services" element={<Services/>}></Route>
           <Route path="/marketplace" element={<AssetDetailPage/>}></Route>
           <Route path="/signup" element={<SignUp/>}></Route>
