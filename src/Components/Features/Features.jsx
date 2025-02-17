@@ -42,7 +42,7 @@ const ExpandingBoxes = () => {
             {images.map((item, index) => (
               <div
                 key={index}
-                className={`relative min-w-[60px] overflow-hidden m-2 border bg-cover bg-center rounded-[50px] shadow-md cursor-pointer transition-all duration-300 ease-in-out ${
+                className={`relative min-w-[40px] sm:min-w-[60px] overflow-hidden m-1 sm:m-2 border bg-cover bg-center rounded-[30px] sm:rounded-[50px] shadow-md cursor-pointer transition-all duration-300 ease-in-out ${
                   activeIndex === index ? "flex-grow-[10]" : "flex-grow"
                 }`}
                 style={{ backgroundImage: `url(${item.url})` }}
@@ -50,13 +50,13 @@ const ExpandingBoxes = () => {
                 onMouseLeave={() => setActiveIndex(null)}
               >
                 <div
-                  className={`absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-50 p-4 rounded-[50px] transition-opacity duration-300 ease-in-out ${
+                  className={`absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-50 p-2 sm:p-4 rounded-[30px] sm:rounded-[50px] transition-opacity duration-300 ease-in-out ${
                     activeIndex === index ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  <h3 className="text-lg md:text-xl font-bold">{item.title}</h3>
-                  <p className="text-sm md:text-base mt-2 text-center">{item.description}</p>
-                  <button className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-black mt-4 px-4 py-2 rounded-lg hover:scale-105 transition-transform">
+                  <h3 className="text-sm sm:text-lg md:text-xl font-bold">{item.title}</h3>
+                  <p className="text-xs sm:text-sm md:text-base mt-1 sm:mt-2 text-center">{item.description}</p>
+                  <button className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-black mt-2 sm:mt-4 px-2 sm:px-4 py-1 sm:py-2 rounded-lg hover:scale-105 transition-transform text-xs sm:text-sm">
                     Learn More
                   </button>
                 </div>

@@ -8,7 +8,6 @@ const Footer = () => {
     <footer className="bg-black text-gray-300 pt-8 pb-6 border-t border-gray-800">
       <div className="container px-4 sm:px-6 lg:px-8 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16 lg:gap-24">
-          {/* Company Info */}
           <div className="flex flex-col items-center md:items-start space-y-4 md:space-y-6">
             <img src={logo} alt="MeshCraft Assets" className="w-32 md:w-44 hover:opacity-90 transition-opacity" />
             <p className="text-sm md:text-base text-gray-400 max-w-md leading-relaxed px-4 md:px-0 text-center md:text-left">
@@ -29,16 +28,12 @@ const Footer = () => {
               <Link to="/services" className="text-gray-400 hover:text-white transition-colors duration-300 text-sm md:text-base">
                 Services
               </Link>
-              <Link to="/assets" className="text-gray-400 hover:text-white transition-colors duration-300 text-sm md:text-base">
-                Assets
-              </Link>
               <Link to="/signup" className="text-gray-400 hover:text-white transition-colors duration-300 text-sm md:text-base">
                 Sign In
               </Link>
             </div>
           </div>
 
-          {/* Social & Copyright */}
           <div className="flex flex-col items-center md:items-end space-y-6 mt-8 md:mt-0">
             <div className="flex space-x-8 md:space-x-6">
               <a 

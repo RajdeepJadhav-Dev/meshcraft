@@ -91,10 +91,8 @@ const AboutUs = () => {
   return (
     <div className="about-us-page">
       <div className="main-content">
-        {/* Gaming Console Panel */}
         <div className="console-panel">
           <div className="outer-box">
-            {/* Circles for the console */}
             <div className="circle-group">
               <span className="circle"></span>
               <span className="circle"></span>
@@ -112,7 +110,6 @@ const AboutUs = () => {
               className="inner-box"
               whileHover={{ boxShadow: "0px 8px 20px rgba(94, 154, 255, 0.7)" }}
             >
-              {/* Animated MESHCRAFT Title */}
               <div className="meshcraft-title-container">
                 <motion.h1
                   className="meshcraft-title left-word"
@@ -160,10 +157,8 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Meet Our Team Section */}
         <MeetOurTeam />
 
-        {/* Panels Section */}
         <div className="panels-section">
           <div className="panels-container">
             {loopDepartments.map((dept, index) => (
