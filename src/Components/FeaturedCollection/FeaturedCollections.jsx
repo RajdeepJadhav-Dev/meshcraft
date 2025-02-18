@@ -41,6 +41,7 @@ const FeaturedCollections = () => {
                                               shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]
                                               backdrop-blur-sm rounded-xl overflow-hidden hover:shadow-purple-500/50 transition-shadow duration-300 border-4 border-gray-900"
               whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }} // Add whileTap for touch devices
               transition={{ type: "spring", stiffness: 150 }}
             >
               <div className="relative h-56 overflow-hidden">
@@ -49,6 +50,7 @@ const FeaturedCollections = () => {
                   alt={collection.title}
                   className="w-full h-full object-contain p-6"
                   whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }} // Add whileTap for touch devices
                   transition={{ type: "spring", stiffness: 150 }}
                 />
               </div>
@@ -58,9 +60,9 @@ const FeaturedCollections = () => {
                 </h3>
                 <p className="text-gray-400 mb-4">{collection.description}</p>
                 <motion.button
-                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-lg hover:from-purple-700 hover:to-blue-600 transition-all duration-300"
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-lg hover:from-purple-700 hover:to-blue-600 transition-all duration-300 cursor-pointer"
                   whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.9 }}
                 >
                   Explore
                 </motion.button>
