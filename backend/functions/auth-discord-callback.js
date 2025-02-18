@@ -1,5 +1,5 @@
 const axios = require('axios');
-const connectDB = require('../utils/db');
+const connectDB = require('../config/db');
 const UserSchema = require('../models/user');
 
 

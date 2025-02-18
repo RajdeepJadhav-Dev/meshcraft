@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const UserSchema = require('../models/user');
-const connectDB = require('../utils/db');
+const connectDB = require('../config/db');
 
 exports.handler = async (event) => {
     await connectDB();

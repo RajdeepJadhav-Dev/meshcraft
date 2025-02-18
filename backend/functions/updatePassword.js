@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const UserSchema = require('../models/user'); 
-const connectDB = require('../utils/db');
+const connectDB = require('../config/db');
 
 
 exports.handler = async (event) => {
