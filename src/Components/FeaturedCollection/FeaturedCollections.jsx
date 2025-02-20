@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import characters3d from "../../assets/featured-collection/3d-character.png";
 import textureAndmaterial from "../../assets/featured-collection/texture-materials.png";
 import enviroinmentAassets from "../../assets/featured-collection/envroinment-assets.png";
+import { Link } from "react-router-dom";
 
 const FeaturedCollections = () => {
   const collections = [
@@ -50,7 +51,7 @@ const FeaturedCollections = () => {
                   alt={collection.title}
                   className="w-full h-full object-contain p-6"
                   whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }} // Add whileTap for touch devices
+                  whileTap={{ scale: 0.95 }} 
                   transition={{ type: "spring", stiffness: 150 }}
                 />
               </div>
@@ -59,6 +60,7 @@ const FeaturedCollections = () => {
                   {collection.title}
                 </h3>
                 <p className="text-gray-400 mb-4">{collection.description}</p>
+                <Link to="/marketplace">
                 <motion.button
                   className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-lg hover:from-purple-700 hover:to-blue-600 transition-all duration-300 cursor-pointer"
                   whileHover={{ scale: 1.05 }}
@@ -66,6 +68,7 @@ const FeaturedCollections = () => {
                 >
                   Explore
                 </motion.button>
+                </Link>
               </div>
             </motion.div>
           ))}

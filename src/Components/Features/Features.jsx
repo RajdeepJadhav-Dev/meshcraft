@@ -4,6 +4,7 @@ import image3 from "../../assets/features/image3.jpg";
 import image4 from "../../assets/features/image4.jpg";
 import image5 from "../../assets/features/image5.jpg";
 import image6 from "../../assets/features/image6.jpg";
+import { Link } from "react-router-dom";
 
 const ExpandingBoxes = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -56,9 +57,11 @@ const ExpandingBoxes = () => {
                 >
                   <h3 className="text-sm sm:text-lg md:text-xl font-bold">{item.title}</h3>
                   <p className="text-xs sm:text-sm md:text-base mt-1 sm:mt-2 text-center">{item.description}</p>
+                  <Link to="/services">
                   <button className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-black mt-2 sm:mt-4 px-2 sm:px-4 py-1 sm:py-2 rounded-lg hover:scale-105 transition-transform text-xs sm:text-sm">
                     Learn More
                   </button>
+                  </Link>
                 </div>
               </div>
             ))}
