@@ -474,4 +474,4 @@ const Assets = () => {
   );
 };
 
-export default AssetDetailPage;
+export default Assets;
