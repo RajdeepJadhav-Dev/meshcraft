@@ -13,12 +13,14 @@ import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Components/ResetPassword/ResetPassword";
 import AboutUs from "./Components/AboutUs/Aboutus"
 import Footer from "./Components/Footer/Footer";
+import ScrollToTop from "./Components/ScrollToTop/ScrollToTop";
 
 gsap.registerPlugin(ScrollToPlugin);
 function App() {
   return (
     <>
       <BrowserRouter>
+      <ScrollToTop/>
       <Navbar/>
         <Routes>
           <Route path="/" element={<Home/>}></Route>

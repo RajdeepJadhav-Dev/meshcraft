@@ -1,22 +1,36 @@
 import React from "react";
-import image1 from "./DM.jpg";
-import image2 from "./CR.png";
+import image1 from "./PM.jpg";
+import image2 from "./Rigg.jpg";
 import image3 from "./TAS.jpg";
-import image4 from "./REN.png";
-import image5 from "./UV.png";
+import image4 from "./Tex.jpg";
+import image5 from "./3DM.jpg";
 import image6 from "./GAO.png";
+import image7 from "./CAS.jpg";
+import image8 from "./Ani.jpg";
  
 const services = [
   {
-    title: "Digital Marketing",
+    title: "Customizable Assets",
     description:
-      "We offer a wide range of digital marketing services to help you grow your business.",
+    "Our assets are customizable to fit your brand's unique style and needs.",
+    image: image7,
+  },
+  {
+    title: "Animation",
+    description:
+    "Our animations are designed to capture your audience's attention and keep them engaged.",
+    image: image8,
+  },
+  {
+    title: "Product Marketing",
+    description:
+      "We offer a wide range of product marketing services to help you grow your business.",
     image: image1,
   },
   {
-    title: "Content Creation",
+    title: "Rigging",
     description:
-      "Our team of experienced content creators will help you bring your ideas to life.",
+    "High-quality rigging services for smooth as well as realistic character and asset animations.",
     image: image2,
   },
   {
@@ -26,15 +40,15 @@ const services = [
     image: image3,
   },
   {
-    title: "Real Estate Networking",
+    title: "Texturing",
     description:
-      "We connect real estate professionals and help them grow their network.",
+      "Expert texturing services for detailed, high-quality, and realistic game assets.",
     image: image4,
   },
   {
-    title: "User Verification",
+    title: "3D Modeling",
     description:
-      "We provide user verification services to ensure the security of your platform.",
+      "Professional 3D modeling for high-quality, game-ready characters and assets.",
     image: image5,
   },
   {

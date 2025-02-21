@@ -28,12 +28,10 @@ export default function Navbar() {
 
   return (
     <nav className="md:border-b-4 md:border-b-gray-950 flex items-center justify-between h-16 w-full px-4 sm:px-10 lg:px-20 bg-gray-900 text-white fixed z-50 shadow-lg">
-      {/* Logo */}
       <div className="text-xl font-semibold logo">
         <img srcSet={logo} alt="logo" className="h-[30px] sm:h-[40px] lg:h-[40px]" />
       </div>
 
-      {/* Mobile Menu Button */}
       <div className="flex ml-auto md:hidden">
         <button
           className="p-2 rounded-lg"
@@ -55,7 +53,6 @@ export default function Navbar() {
     { to: "/", text: "Home" },
     { to: "/about", text: "About Us" },
     { to: "/services", text: "Services" },
-    // { to: "/assets", text: "Assets" },
     { to: "/signup", text: "Sign In", showWhenUser: false },
   ].map((link, index) =>
     (link.showWhenUser === false && user) ? null : (
@@ -125,7 +122,6 @@ export default function Navbar() {
                           }}
                         >
                           <div className="pb-2">
-                            {/* User Info Section */}
                             <div className="px-4 py-3 border-b border-gray-700">
                               <p className="text-sm text-gray-300">Signed in as</p>
                               <p className="text-sm font-medium text-white truncate">
@@ -133,7 +129,6 @@ export default function Navbar() {
                               </p>
                             </div>
 
-                            {/* Menu Items */}
                             <div className="py-1">
                               <Link to="/profile">
                                 <motion.div

@@ -1,10 +1,10 @@
-
 import * as THREE from 'three';
 import { Canvas } from "@react-three/fiber";
 import React, { Suspense, useRef, useState, useEffect } from "react";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Link } from "react-router-dom";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 
 const Model = ({ modelUrl, scale, rotation }) => {
   const [model, setModel] = useState(null);
@@ -196,10 +196,11 @@ const MarketPlace = () => {
     const savedFilters = localStorage.getItem("filters");
     return savedFilters ? JSON.parse(savedFilters) : [];
   });
+  
   const [filteredAssets, setFilteredAssets] = useState([]);
   const [selectedModel, setSelectedModel] = useState(null);
   const [showTextures, setShowTextures] = useState(false);
-
+  
   const assets = [
     {
       title: "Flowergirl",
@@ -235,6 +236,18 @@ const MarketPlace = () => {
       rotation: [0, 0, 0],
     },
     {
+      title: "Zombie",
+      description: "Depicts a male zombie in a detailed, realistic style.",
+      poly: "Low Poly",
+      price: "$85.00",
+      modelUrl: "/3dfiles/malezombieidle.glb",
+      software: "Blender",
+      softwareLogo: "/SoftwareLogo/Blender.png",
+      scale: [9, 9, 9],
+      rotation: [0, 0, 0],
+
+    },
+    {
       title: "Small Barracks",
       description: "A compact military structure with a simple design.",
       poly: "Medium Poly",
@@ -265,7 +278,7 @@ const MarketPlace = () => {
       software: "Cinema 4D",
       softwareLogo: "/SoftwareLogo/Unity3D.png",
       scale: [1, 1, 1],
-      rotation: [0, -Math.PI, 0],
+      rotation: [0, -Math.PI/2, 0],
     },
     {
       title: "Mine",
@@ -300,6 +313,7 @@ const MarketPlace = () => {
       scale: [2, 2, 2],
       rotation: [0, -Math.PI / 2, 0],
     },
+
     {
       title: "Granitor",
       description: "A mythical stone-based creature with a rugged appearance.",
@@ -322,6 +336,7 @@ const MarketPlace = () => {
       scale: [1, 1, 1],
       rotation: [0, Math.PI / 2, 0],
     },
+    
 ];
 
 const textures = [
@@ -398,12 +413,20 @@ const textures = [
     localStorage.setItem("filters", JSON.stringify(filters)); // Save filters to local storage
   }, [filters]);
 
+  const handleCardClick = (asset) => {
+    setSelectedModel(asset);
+  };
+
+  const closeCard = () => {
+    setSelectedModel(null);
+  };
+
   return (
     <>
       {selectedModel && (
         <FullscreenCard 
           model={selectedModel} 
-          onClose={() => setSelectedModel(null)} 
+          onClose={closeCard} 
           assets={assets} 
           onAssetClick={setSelectedModel} 
         />
@@ -435,7 +458,7 @@ const textures = [
                   <ProductCard 
                     key={`asset-${index}`} 
                     asset={asset} 
-                    onClick={() => setSelectedModel(asset)} 
+                    onClick={() => handleCardClick(asset)} 
                   />
                 ))}
                 {filters.length === 0 && textures.map((texture, index) => (
@@ -445,7 +468,6 @@ const textures = [
             )}
           </div>
         </div>
-       
       </section>
     </>
   );
