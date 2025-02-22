@@ -131,7 +131,8 @@ const CreativeShowcase = () => {
           {showcaseItems.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleCardClick(item)}
+              //we're not using this right now since the models are not ready yet
+              // onClick={() => handleCardClick(item)}
               className="bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
             >
               <div className="relative w-full h-48 bg-gray-900">
