@@ -69,23 +69,18 @@ const assetSchema = new Schema({
   technical: {
     objects: {
       type: Number,
-      required: true
     },
     vertices: {
       type: Number,
-      required: true
     },
     edges: {
       type: Number,
-      required: true
     },
     faces: {
       type: Number,
-      required: true
     },
     triangles: {
       type: Number,
-      required: true
     }
   }
 }, { timestamps: true }); // createdAt, updatedAt

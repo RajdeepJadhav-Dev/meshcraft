@@ -16,6 +16,7 @@ import { MdClose } from 'react-icons/md'
 
 import { HiX } from 'react-icons/hi'
 import authContext from '../context/authContext'
+import { Link } from 'react-router-dom'
 
 
 
@@ -52,6 +53,11 @@ const navItems = [
 const SideBar = () => {
   const [activeItem, setActiveItem] = React.useState('dashboard')
   const { isSidebarOpen, setIsSidebarOpen } = useContext(authContext)
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    window.location.href = "/"
+  }
+
   
 
   
@@ -103,19 +109,18 @@ const SideBar = () => {
         </nav>
       </div>
 
-      {/* Logout Button */}
-      {/* <div className="m-4">
+     {/* <div className="m-4">
         <button
           className="
             w-full bg-white text-[#2b2e4a]
             flex items-center justify-center gap-2 py-2 rounded-lg
-            hover:bg-gray-100 transition-all duration-300
+            hover:bg-gray-300 transition-all duration-300
           "
         >
           <FaSignOutAlt />
-          <span className="text-sm font-medium">Logout</span>
+          <span className="text-sm font-medium" handleclick={handleLogout}>Logout</span>
         </button>
-      </div> */}
+      </div>  */}
     </div>
   )
 }

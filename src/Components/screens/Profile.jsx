@@ -13,7 +13,7 @@ const AdminProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempAdmin, setTempAdmin] = useState(admin);
   const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", role: "Moderator", email: "john@example.com" },
+    { id: 1, name: "Admin", role: "Moderator", email: "john@example.com" },
     { id: 2, name: "Jane Smith", role: "Editor", email: "jane@example.com" },
   ]);
 

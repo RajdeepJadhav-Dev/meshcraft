@@ -4,6 +4,7 @@ import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
 import login from "../../assets/signup/login.png";
 import register from "../../assets/signup/register.png";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Input = ({ id, label, type, autoComplete, value, onChange, icon, error }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -303,8 +304,14 @@ const handleLogin = async (e) => {
           />
         </div>
       </div>
+    
   </div>
+  
 </div>
+<div className="absolute bottom-4 right-4 text-gray-400 text-xs">
+<div className="text-blue-600 font-medium italic  underline relative"><Link to="/adminlogin">Login as Admin</Link></div>
+</div>
+
     </div>
 
   

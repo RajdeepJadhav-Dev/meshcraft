@@ -80,6 +80,11 @@ const AdminHome = () => {
     setPreviewSrc("");
   };
 
+  const handleLogout =()=>{
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  }
+
 
   if (loading) {
     return <div>Loading assets...</div>;
@@ -109,11 +114,11 @@ const AdminHome = () => {
               alt="profile"
               className="w-8 h-8 object-cover shadow-2xl drop-shadow-lg rounded-full"
             />
-            <span className="text-sm font-medium text-[#5B5A99]">John Doe</span>
+            <span className="text-sm font-medium text-[#5B5A99]">Admin</span>
           </div>
           <div className="flex items-center space-x-2 cursor-pointer">
             <img src={Logout} alt="logout" />
-            <span className="text-sm font-medium text-[#5B5A99]">Logout</span>
+            <span className="text-sm font-medium text-[#5B5A99]" onClick={handleLogout}>Logout</span>
           </div>
         </div>
       </header>

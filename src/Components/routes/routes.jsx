@@ -18,6 +18,7 @@ import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { Outlet } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
+import AdminLogin from "../AdminLogin/AdminLogin";
 
 const routes = [
   {
@@ -65,6 +66,10 @@ const routes = [
       {
         path: "/about",
         element: <AboutUs />,
+      },
+      {
+        path: "/adminlogin",
+        element: <AdminLogin />,
       },
     ],
   },
