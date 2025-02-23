@@ -6,7 +6,7 @@ exports.handler = async (event, context) => {
     await connectDB();
     try {
 
-        const { id } = event.queryStringParameters;
+        const id = event.path.split("/").pop();
 
         const asset = await Asset.findByIdAndDelete(id);
 
