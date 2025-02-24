@@ -53,16 +53,16 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black">
+    <div className="flex flex-col gap-4 items-center justify-center min-h-screen bg-gray-900 p-4">
       <img
         src={logo}
         alt="Meshcraft Logo"
-        className="w-80 mb-6"
+        className="w-64 md:w-80 mb-6"
       />
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <div className="flex flex-col items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">
-            Welcome to Admin Dashboard
+      <div className="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="flex flex-col items-center mb-6">
+      <h1 className="text-xl md:text-2xl font-bold text-white text-center">
+      Welcome to Admin Dashboard
           </h1>
         </div>
         <h2 className="text-3xl font-bold text-white mb-6 text-center">Login</h2>

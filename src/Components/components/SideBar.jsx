@@ -3,10 +3,8 @@ import {
   FaThLarge,
   FaUsers,
   FaMoneyBill,
-  FaCalendarAlt,
   FaCog,
-  FaSignOutAlt,
-  FaBars,
+
 } from 'react-icons/fa'
 
 import Logo from "../../assets/admin/Horizontalwithbgsmall.png"
@@ -52,52 +50,48 @@ const navItems = [
 
 const SideBar = () => {
   const [activeItem, setActiveItem] = React.useState('dashboard')
-  const { isSidebarOpen, setIsSidebarOpen } = useContext(authContext)
+  const { setIsSidebarOpen } = useContext(authContext)
   const handleLogout = () => {
     localStorage.removeItem("token")
     window.location.href = "/"
   }
-
+  const handleNavClick = (id) => {
+    localStorage.setItem("activeBtn", id)
+    setActiveItem(id)
+  }
   
 
   
 
 
   return (
-    <div className="text-white h-[100vh] w-64 flex flex-col justify-between">
-      {/* Logo / Brand Area */}
+    // The sidebar container is hidden on small devices
+    <div className="hidden md:flex text-white h-screen w-64 flex-col justify-between bg-[#2b2e4a]">
       <div>
         <div className="flex items-center justify-between px-5 py-6">
-          <a href="/">
-            <img src={Logo} alt="MeshCraft Logo" />
-          </a>
-          {/* Replace the "H" with a hamburger icon */}
-          <div className="flex items-center justify-end">
-            <MdClose onClick={()=>{
-              setIsSidebarOpen((prev)=>!prev)}} className="text-xl cursor-pointer hover:text-gray-300 transition-all" />
-          </div>
+          <Link to ="/">
+          <img src={Logo} alt="MeshCraft Logo" />
+          </Link>
+          <button
+            onClick={() => setIsSidebarOpen(prev => !prev)}
+            className="hidden" // Not displayed on desktop in this design
+          >
+            {/* Could add an icon here if needed */}
+          </button>
         </div>
-
         {/* Navigation */}
         <nav className="mt-4">
           <ul className="flex flex-col space-y-2">
             {navItems.map(item => {
               const Icon = item.icon
-              const isActive = (localStorage.getItem("activeBtn") === item.id)
-
+              const isActive = localStorage.getItem("activeBtn") === item.id
               return (
                 <li
                   key={item.id}
-                  onClick={() => localStorage.setItem("activeBtn",item.id)}
-                  // Smooth transitions
+                  onClick={() => handleNavClick(item.id)}
                   className={`
-                    flex items-center gap-3 px-5 py-2 cursor-pointer
-                    transition-all duration-300 ease-in-out
-                    ${
-                      isActive
-                        ? 'bg-[#383b5b] rounded-r-full mx-3 shadow-inner'
-                        : 'hover:bg-white/10'
-                    }
+                    flex items-center gap-3 px-5 py-2 cursor-pointer transition-all duration-300 ease-in-out
+                    ${isActive ? 'bg-[#383b5b] rounded-r-full mx-3 shadow-inner' : 'hover:bg-white/10'}
                   `}
                 >
                   <Icon />
@@ -108,19 +102,7 @@ const SideBar = () => {
           </ul>
         </nav>
       </div>
-
-     {/* <div className="m-4">
-        <button
-          className="
-            w-full bg-white text-[#2b2e4a]
-            flex items-center justify-center gap-2 py-2 rounded-lg
-            hover:bg-gray-300 transition-all duration-300
-          "
-        >
-          <FaSignOutAlt />
-          <span className="text-sm font-medium" handleclick={handleLogout}>Logout</span>
-        </button>
-      </div>  */}
+      {/* Footer or logout button can be added here if needed */}
     </div>
   )
 }
