@@ -79,7 +79,7 @@ const ModelViewer = ({
           </Suspense>
         </Canvas>
       </div>
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-gray-900 p-1 rounded-lg">
+      <div className="invisible sm:flex absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-gray-900 p-1 rounded-lg">
         {Object.keys(rotationMap).map((key) => (
           <button
             key={key}

@@ -96,41 +96,41 @@ const AdminProfile = () => {
         <div className="w-full max-w-3xl bg-[#1b1e33] p-6 rounded-3xl shadow-lg text-white relative">
           {/* Profile Section */}
           <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="flex items-center gap-4">
-              <img
-                src={ProfilePic}
-                alt="Admin"
-                className="w-20 h-20 rounded-full border-4 border-purple-500 shadow-lg object-cover"
-              />
-              <div>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={tempAdmin.name}
-                    onChange={(e) =>
-                      setTempAdmin({ ...tempAdmin, name: e.target.value })
-                    }
-                    className="w-full text-xl font-bold bg-transparent border-b-2 border-gray-500 focus:border-purple-500 outline-none"
-                  />
-                ) : (
-                  <h1 className="text-2xl font-bold">{admin.name}</h1>
-                )}
-                <p className="text-gray-400">{admin.email}</p>
-                <span className="text-sm bg-purple-700 px-3 py-1 rounded-full font-bold">
-                  {admin.role}
-                </span>
-              </div>
-            </div>
+  <div className="flex items-center gap-4">
+    <img
+      src={ProfilePic}
+      alt="Admin"
+      className="w-20 h-20 rounded-full border-4 border-purple-500 shadow-lg object-cover"
+    />
+    <div className="max-w-[200px] sm:max-w-none">
+      {isEditing ? (
+        <input
+          type="text"
+          value={tempAdmin.name}
+          onChange={(e) =>
+            setTempAdmin({ ...tempAdmin, name: e.target.value })
+          }
+          className="w-full text-xl font-bold bg-transparent border-b-2 border-gray-500 focus:border-purple-500 outline-none"
+        />
+      ) : (
+        <h1 className="text-2xl font-bold">{admin.name}</h1>
+      )}
+      <p className="text-gray-400 opacity-0  sm:opacity-100">{admin.email}</p>
+      <span className="text-sm bg-purple-700 px-3 py-1 rounded-full font-bold">
+        {admin.role}
+      </span>
+    </div>
+  </div>
 
-            {/* Edit Button */}
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="mt-4 sm:mt-0 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full flex items-center gap-2 transition"
-            >
-              <FaEdit />
-              {isEditing ? "Cancel" : "Edit"}
-            </button>
-          </div>
+  {/* Edit Button */}
+  <button
+    onClick={() => setIsEditing(!isEditing)}
+    className="mt-4 sm:mt-0 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full flex items-center gap-2 transition"
+  >
+    <FaEdit />
+    {isEditing ? "Cancel" : "Edit"}
+  </button>
+</div>
 
           {/* Bio Section */}
           <div className="mt-4">

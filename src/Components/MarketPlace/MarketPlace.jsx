@@ -101,7 +101,7 @@ const TextureCard = ({ asset, onClick }) => {
 // -- Sidebar Component
 const Sidebar = ({ assets, onAssetClick }) => {
   return (
-    <div className="w-1/3 bg-gray-800 p-4 overflow-y-auto text-white rounded-r-lg">
+    <div className="w-full md:w-1/3 bg-gray-800 p-4 overflow-y-auto text-white rounded-r-lg">
       <h3 className="text-lg font-bold mb-4">Other Assets</h3>
       <ul className="space-y-4">
         {assets.map((asset, index) => (
