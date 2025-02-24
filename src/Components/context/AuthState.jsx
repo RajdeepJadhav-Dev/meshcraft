@@ -11,7 +11,6 @@ const AuthState = (props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // State for form data (used in AdminHome)
   const [assetData, setAssetData] = useState({
     title: "",
     description: "",
@@ -34,13 +33,11 @@ const AuthState = (props) => {
     triangles: ""
   });
 
-  // State for fetched assets (used in DeleteAsset and other components)
   const [editAssetData, setEditAssetData] = useState([]);
 
-  const BASE_URL = "/.netlify/functions";
-      // const BASE_URL = "http://localhost:5000/assets";
+  // const BASE_URL = "/.netlify/functions";
+      const BASE_URL = "http://localhost:5000/assets";
 
-  // Fetch assets
   const getAssets = async () => {
     try {
       const response = await fetch(`${BASE_URL}/getAssets`);

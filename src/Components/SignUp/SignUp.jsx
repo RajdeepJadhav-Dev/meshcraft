@@ -308,10 +308,9 @@ const handleLogin = async (e) => {
   </div>
   
 </div>
-<div className="absolute bottom-4 right-4 text-gray-400 text-xs">
-<div className="text-blue-600 font-medium italic  underline relative"><Link to="/adminlogin">Login as Admin</Link></div>
-</div>
-
+<div className="absolute bottom-12  text-gray-400 text-xs">
+<div className="text-blue-600 font-medium italic  underline"><Link to="/adminlogin">Login as Admin</Link></div>
+</div> 
     </div>
 
   

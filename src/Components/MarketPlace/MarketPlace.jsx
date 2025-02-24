@@ -131,10 +131,10 @@ const Sidebar = ({ assets, onAssetClick }) => {
 // -- FullscreenCard Component
 const FullscreenCard = ({ asset, onClose, filteredAssets, onAssetClick }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 text-white">
-      <div className="bg-gray-900 rounded-lg shadow-lg w-[48rem] h-[30rem] flex overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 text-white p-4">
+      <div className="bg-gray-900 rounded-lg shadow-lg w-full max-w-4xl h-auto max-h-[90vh] flex flex-col md:flex-row overflow-hidden">
         <div className="flex-1 flex flex-col items-center p-4">
-          <div className="relative w-full h-2/5">
+          <div className="relative w-full h-48 md:h-64">
             <Canvas>
               <ambientLight intensity={0.5} />
               <spotLight position={[10, 15, 10]} angle={0.3} />
@@ -152,13 +152,13 @@ const FullscreenCard = ({ asset, onClose, filteredAssets, onAssetClick }) => {
             <h2 className="text-xl font-bold mb-2">{asset.title}</h2>
             <p className="text-sm mb-1">{asset.description}</p>
             <p className="text-lg mb-1">Price: {asset.price}</p>
-            <div className="flex items-center space-x-2 mb-2">
+            <div className="flex items-center justify-center space-x-2 mb-2">
               {asset.softwareLogo && (
                 <img src={asset.softwareLogo} alt={asset.software} className="w-6 h-6" />
               )}
               <p className="text-sm">{asset.software}</p>
             </div>
-            <div className="flex justify-center space-x-4 mt-4">
+            <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 mt-4">
               <button
                 className="bg-red-600 text-white px-4 py-1 rounded-lg"
                 onClick={onClose}
@@ -285,14 +285,15 @@ const MarketPlace = () => {
       <section className="bg-black min-h-screen py-12">
         <div className="text-white px-16">
           <h1 className="text-4xl font-bold pt-10">Marketplace</h1>
-          <div className="mb-6 flex items-center space-x-4">
+          <div className="mb-6 flex flex-wrap items-center gap-2">
             {["High Poly", "Medium Poly", "Low Poly", "Texture"].map((filter) => (
               <span
                 key={filter}
-                className={`px-4 py-2 rounded-lg cursor-pointer ${filters.includes(filter)
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-800 text-gray-300"
-                  }`}
+                className={`px-2 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base rounded-lg cursor-pointer ${
+                  filters.includes(filter)
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-800 text-gray-300"
+                }`}
                 onClick={() => handleFilterClick(filter)}
               >
                 {filter}
