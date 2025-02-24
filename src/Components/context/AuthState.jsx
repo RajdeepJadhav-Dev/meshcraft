@@ -35,8 +35,8 @@ const AuthState = (props) => {
 
   const [editAssetData, setEditAssetData] = useState([]);
 
-  // const BASE_URL = "/.netlify/functions";
-      const BASE_URL = "http://localhost:5000/assets";
+  const BASE_URL = "/.netlify/functions";
+      // const BASE_URL = "http://localhost:5000/assets";
 
   const getAssets = async () => {
     try {
