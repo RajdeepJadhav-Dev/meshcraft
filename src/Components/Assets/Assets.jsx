@@ -9,12 +9,13 @@ import authContext from "../context/authContext";
 
 const Model = ({ idleModelUrl, walkModelUrl, rotation, isAnimating, isAnimatingWalk }) => {
   const [model, setModel] = useState(null);
+  const [animations, setAnimations] = useState([]);
   const mixer = useRef();
   const [currentUrl, setCurrentUrl] = useState(idleModelUrl);
+  const currentAction = useRef();
 
   useEffect(() => {
     const loader = new GLTFLoader();
-    // Use walkModelUrl if walk animation is active, otherwise use idleModelUrl
     const url = isAnimatingWalk ? walkModelUrl : idleModelUrl;
     setCurrentUrl(url);
 
@@ -22,10 +23,17 @@ const Model = ({ idleModelUrl, walkModelUrl, rotation, isAnimating, isAnimatingW
       url,
       (gltf) => {
         setModel(gltf.scene);
+        setAnimations(gltf.animations);
         mixer.current = new THREE.AnimationMixer(gltf.scene);
+        
         if (gltf.animations && gltf.animations.length > 0) {
-          const action = mixer.current.clipAction(gltf.animations[0]);
-          action.play();
+          // Stop any existing animation
+          if (currentAction.current) {
+            currentAction.current.stop();
+          }
+          // Play the first animation
+          currentAction.current = mixer.current.clipAction(gltf.animations[0]);
+          currentAction.current.play();
         }
       },
       undefined,
@@ -79,12 +87,17 @@ const ModelViewer = ({
           </Suspense>
         </Canvas>
       </div>
-      <div className="invisible sm:flex absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 bg-gray-900 p-1 rounded-lg">
+      <div className="invisible sm:flex absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-wrap gap-2 bg-gray-900 p-2 rounded-lg">
         {Object.keys(rotationMap).map((key) => (
           <button
             key={key}
             onClick={() => setView(key)}
-            className="bg-gray-700 text-white p-1 rounded w-16 h-12 flex items-center justify-center"
+            className={`
+              bg-gray-700 text-white p-2 rounded w-20 h-12 
+              flex items-center justify-center
+              hover:bg-gray-600 transition
+              ${view === key ? 'ring-2 ring-orange-500' : ''}
+            `}
           >
             {key.charAt(0).toUpperCase() + key.slice(1)}
           </button>
@@ -97,7 +110,7 @@ const ModelViewer = ({
               document.exitFullscreen();
             }
           }}
-          className="bg-gray-700 text-white p-1 rounded w-16 h-12 flex items-center justify-center"
+          className="bg-gray-700 text-white p-2 rounded w-20 h-12 flex items-center justify-center hover:bg-gray-600 transition"
         >
           Full
         </button>
@@ -125,6 +138,10 @@ const AssetDetailPage = () => {
   // For zombie asset animation toggles
   const [isAnimating, setIsAnimating] = useState(false);
   const [isAnimatingWalk, setIsAnimatingWalk] = useState(false);
+  const [selectedAnimation, setSelectedAnimation] = useState('idle');
+
+  // Check if the asset has animations
+  const hasAnimations = Boolean(asset.walkModelUrl) || (asset.animations && asset.animations.length > 0);
 
   useEffect(() => {
     if (detailsRef.current) {
@@ -170,26 +187,51 @@ const AssetDetailPage = () => {
             setIsAnimatingWalk={setIsAnimatingWalk}
           />
 
-          {/* Show animation toggles if the asset supports a walk model (e.g. Zombie) */}
-          {walkModelUrl && (
+          {/* Show animation controls only if the asset has animations */}
+          {hasAnimations && (
             <div className="mt-4 flex space-x-2">
+              <select 
+                value={selectedAnimation}
+                onChange={(e) => {
+                  setSelectedAnimation(e.target.value);
+                  setIsAnimating(false);
+                  setIsAnimatingWalk(false);
+                }}
+                className="bg-gray-700 text-white px-4 py-2 rounded-lg"
+              >
+                {asset.animations?.map((anim, index) => (
+                  <option key={index} value={anim.name || `animation_${index}`}>
+                    {anim.name || `Animation ${index + 1}`}
+                  </option>
+                )) || (
+                  <>
+                    <option value="idle">Idle Animation</option>
+                    {walkModelUrl && <option value="walk">Walk Animation</option>}
+                  </>
+                )}
+              </select>
               <button
                 onClick={() => {
-                  setIsAnimating(!isAnimating);
+                  if (selectedAnimation === 'idle') {
+                    setIsAnimating(true);
+                    setIsAnimatingWalk(false);
+                  } else {
+                    setIsAnimatingWalk(true);
+                    setIsAnimating(false);
+                  }
+                }}
+                className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition"
+              >
+                Start Animation
+              </button>
+              <button
+                onClick={() => {
+                  setIsAnimating(false);
                   setIsAnimatingWalk(false);
                 }}
                 className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition"
               >
-                {isAnimating ? "Stop Idle Animation" : "Start Idle Animation"}
-              </button>
-              <button
-                onClick={() => {
-                  setIsAnimatingWalk(!isAnimatingWalk);
-                  setIsAnimating(false);
-                }}
-                className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition"
-              >
-                {isAnimatingWalk ? "Stop Walk Animation" : "Start Walk Animation"}
+                Stop Animation
               </button>
             </div>
           )}
