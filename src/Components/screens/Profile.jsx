@@ -1,48 +1,56 @@
-import React, { useState } from "react";
-import { FaUserShield, FaUsersCog, FaEdit, FaSignOutAlt, FaCogs, FaTrash, FaCheck, FaBars, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import {
+  FaUserShield,
+  FaUsersCog,
+  FaEdit,
+  FaSignOutAlt,
+  FaCogs,
+  FaTrash,
+  FaCheck,
+  FaBars,
+  FaTimes
+} from "react-icons/fa";
 import ProfilePic from "../../assets/admin/Face.png";
 import { useNavigate } from "react-router-dom";
-
-
+ 
 const AdminProfile = () => {
   const [admin, setAdmin] = useState({
     name: "Admin",
     email: "webd.meshcraft@gmail.com",
-    role: "Super Admin",
-    bio: "Managing system users & ensuring security. Admin dashboard access.",
   });
   const navigate = useNavigate();
+ 
   const handleLogout = async () => {
     try {
-     
       localStorage.removeItem("token");
-     
       navigate("/");
     } catch (error) {
       console.error("Error during logout", error);
     }
   };
-
+ 
   const [isEditing, setIsEditing] = useState(false);
   const [tempAdmin, setTempAdmin] = useState(admin);
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", role: "Moderator", email: "john@example.com" },
-    { id: 2, name: "Jane Smith", role: "Editor", email: "jane@example.com" },
-  ]);
-
-  // Mobile Sidebar State & Toggle
+ 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
-
-  const handleEdit = () => {
-    setAdmin(tempAdmin);
-    setIsEditing(false);
-  };
-
-  const handleDeleteUser = (id) => {
-    setUsers(users.filter(user => user.id !== id));
-  };
-
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+ 
+  const [users, setUsers] = useState([]);
+ 
+  useEffect(() => {
+    fetch('/.netlify/functions/allusers')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch users');
+        }
+        return response.json();
+      })
+      .then(data => setUsers(data))
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      });
+  }, []);
+ 
   return (
     <div className="relative">
       {/* Mobile Sidebar Toggle Button */}
@@ -58,144 +66,121 @@ const AdminProfile = () => {
           )}
         </button>
       </div>
-
+ 
       {/* Mobile Sidebar Dropdown Menu */}
       {sidebarOpen && (
-                <div className="md:hidden fixed top-20 left-4 bg-[#1b1e33] rounded-lg shadow-lg p-4 z-40">
-                  <ul className="space-y-2">
-                   
-                    <li>
-                      <a href="/admin" className="block text-gray-200 hover:text-white">
-                        Add Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/editassets" className="block text-gray-200 hover:text-white">
-                        Edit Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/deleteassets" className="block text-gray-200 hover:text-white">
-                        Delete Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/profile" className="block text-gray-200 hover:text-white">
-                        Profile
-                      </a>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout}>Logout</button>
-                    </li>
-                  </ul>
-                </div>
-              )}
-
-      {/* Main Profile Card */}
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 p-6">
-        <div className="w-full max-w-3xl bg-[#1b1e33] p-6 rounded-3xl shadow-lg text-white relative">
-          {/* Profile Section */}
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-  <div className="flex items-center gap-4">
-    <img
-      src={ProfilePic}
-      alt="Admin"
-      className="w-20 h-20 rounded-full border-4 border-purple-500 shadow-lg object-cover"
-    />
-    <div className="max-w-[200px] sm:max-w-none">
-      {isEditing ? (
-        <input
-          type="text"
-          value={tempAdmin.name}
-          onChange={(e) =>
-            setTempAdmin({ ...tempAdmin, name: e.target.value })
-          }
-          className="w-full text-xl font-bold bg-transparent border-b-2 border-gray-500 focus:border-purple-500 outline-none"
-        />
-      ) : (
-        <h1 className="text-2xl font-bold">{admin.name}</h1>
-      )}
-      <p className="text-gray-400 opacity-0  sm:opacity-100">{admin.email}</p>
-      <span className="text-sm bg-purple-700 px-3 py-1 rounded-full font-bold">
-        {admin.role}
-      </span>
-    </div>
-  </div>
-
-  {/* Edit Button */}
-  <button
-    onClick={() => setIsEditing(!isEditing)}
-    className="mt-4 sm:mt-0 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full flex items-center gap-2 transition"
-  >
-    <FaEdit />
-    {isEditing ? "Cancel" : "Edit"}
-  </button>
-</div>
-
-          {/* Bio Section */}
-          <div className="mt-4">
-            {isEditing ? (
-              <textarea
-                value={tempAdmin.bio}
-                onChange={(e) =>
-                  setTempAdmin({ ...tempAdmin, bio: e.target.value })
-                }
-                className="w-full bg-transparent border-b-2 border-gray-500 focus:border-purple-500 outline-none p-2"
-              />
-            ) : (
-              <p className="text-gray-300">{admin.bio}</p>
-            )}
-
-            {isEditing && (
-              <button
-                onClick={handleEdit}
-                className="mt-4 px-6 py-2 bg-green-500 text-white rounded-full shadow-md hover:scale-105 transition-transform"
-              >
-                <FaCheck className="mr-1" /> Save Changes
+        <div className="md:hidden fixed top-20 left-4 bg-[#1b1e33] rounded-lg shadow-lg p-4 z-40">
+          <ul className="space-y-2">
+            <li>
+              <a href="/admin" className="block text-gray-200 hover:text-white">
+                Add Assets
+              </a>
+            </li>
+            <li>
+              <a href="/admin/editassets" className="block text-gray-200 hover:text-white">
+                Edit Assets
+              </a>
+            </li>
+            <li>
+              <a href="/admin/deleteassets" className="block text-gray-200 hover:text-white">
+                Delete Assets
+              </a>
+            </li>
+            <li>
+              <a href="/admin/profile" className="block text-gray-200 hover:text-white">
+                Profile
+              </a>
+            </li>
+            <li>
+              <button onClick={handleLogout} className="block text-gray-200 hover:text-white">
+                Logout
               </button>
-            )}
-          </div>
-
-          {/* User Management Section (Optional / Commented Out) */}
-          {/*
-          <div className="mt-8">
-            <h2 className="text-xl font-bold text-purple-400">Manage Users</h2>
-            <div className="mt-4 bg-gray-900 p-4 rounded-lg shadow-md">
-              {users.length === 0 ? (
-                <p className="text-gray-500 text-sm">No users found</p>
-              ) : (
-                <ul className="space-y-3">
-                  {users.map(user => (
-                    <li key={user.id} className="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
-                      <div>
-                        <h3 className="text-lg font-semibold">{user.name}</h3>
-                        <p className="text-sm text-gray-400">{user.email}</p>
-                        <span className="text-xs bg-blue-700 px-2 py-1 rounded">{user.role}</span>
-                      </div>
+            </li>
+          </ul>
+        </div>
+      )}
+ 
+      {/* Main Profile Card */}
+      <div className="flex min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 p-6">
+        <div className="w-full bg-[#1b1e33] p-6 rounded-3xl shadow-lg text-white">
+          {/* Top Section: Admin Info & Total Users Card */}
+          <div className="flex flex-col md:flex-row md:justify-between items-center">
+            {/* Admin Info */}
+            <div className="flex items-center gap-4">
+              <img
+                src={ProfilePic}
+                alt="Admin"
+                className="w-20 h-20 rounded-full border-4 border-purple-500 shadow-lg object-cover"
+              />
+              <div>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={tempAdmin.name}
+                    onChange={(e) =>
+                      setTempAdmin({ ...tempAdmin, name: e.target.value })
+                    }
+                    className="text-2xl font-bold bg-transparent border-b-2 border-gray-500 focus:border-purple-500 outline-none"
+                  />
+                ) : (
+                  <div className="flex flex-row gap-3 items-center">
+                    <h1 className="text-2xl font-bold">{admin.name}</h1>
+                    <div className="hidden sm:flex justify-end">
                       <button
-                        onClick={() => handleDeleteUser(user.id)}
-                        className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-full"
+                        onClick={handleLogout}
+                        className="py-2 px-6 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg flex items-center gap-2"
                       >
-                        <FaTrash />
+                        <FaSignOutAlt /> Logout
                       </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+                    </div>
+                  </div>
+                )}
+                <p className="text-gray-400 break-all mt-2">{admin.email}</p>
+              </div>
+            </div>
+ 
+            {/* Total Users Card */}
+            <div className="mt-4 w-full lg:w-48 md:mt-0 md:w-36">
+              <div className="bg-gray-800 rounded-lg p-4 text-center min-w-[150px]">
+                <h3 className="text-lg font-bold">Total Users</h3>
+                <p className="text-2xl">{users.length}</p>
+              </div>
             </div>
           </div>
-          */}
-
-          {/* Quick Actions */}
-          <div className="mt-6 flex">
-            <button onClick={handleLogout} className="w-full py-3 cursor-pointer bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg flex items-center gap-2 justify-center">
-              <FaSignOutAlt /> Logout
-            </button>
+ 
+          {/* Users List Table */}
+          <div className="mt-8 overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-700">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 text-left text-sm font-bold uppercase text-gray-400">
+                    Username
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-bold uppercase text-gray-400">
+                    Email
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-bold uppercase text-gray-400">
+                    Created At
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {users.map((user) => (
+                  <tr key={user._id}>
+                    <td className="px-4 py-2 text-sm">{user.username}</td>
+                    <td className="px-4 py-2 text-sm">{user.email}</td>
+                    <td className="px-4 py-2 text-sm">
+                      {new Date(user.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
+ 
 export default AdminProfile;

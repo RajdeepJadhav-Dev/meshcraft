@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/admin');
+const Users = require('../models/user');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'meshcraft123#';
 
@@ -73,3 +74,13 @@ exports.login = async (req, res) => {
     }
 
 };
+
+exports.allUsers = async (req, res) => {
+    try {
+        const users = await Users.find({});
+        res.status(200).json(users);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Error fetching users", error: error.message });
+      }
+    };
