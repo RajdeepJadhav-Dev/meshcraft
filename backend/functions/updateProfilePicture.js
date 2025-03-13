@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
-const UserSchema = require('../models/user');  
+const UserSchema = require('../models/user'); 
+const connectDB = require('../config/db');
 
-mongoose.connect(process.env.MONGODB_URI);
+
 
 exports.handler = async (event) => {
+    await connectDB();
     try {
         const { userId, imageBase64, mimeType } = JSON.parse(event.body);
 

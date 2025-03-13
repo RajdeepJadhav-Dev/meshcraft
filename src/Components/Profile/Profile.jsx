@@ -210,182 +210,186 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-6">
-      <div className="w-[40%] max-w-4xl bg-gray-800 shadow-lg rounded-lg p-8">
-        <div className="mb-6 text-center">
-          <div className="relative inline-block">
-            <img
-              src={user?.profilePicture || pfp}
-              alt="Profile"
-              className="w-36 h-36 rounded-full object-cover border-gray-700 border-4"
-            />
-            <label
-              htmlFor="profilePictureInput"
-              className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-2 cursor-pointer hover:bg-blue-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15.232 5H21a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V7a2 2 0 012-2h5.768M16 3l-4 4m0 0l-4-4m4 4V15"
-                />
-              </svg>
-            </label>
-            <input
-              id="profilePictureInput"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleProfilePictureChange}
-            />
-          </div>
-          <div className="mt-4">
-            <h2 className="text-sm font-semibold text-gray-400">Email</h2>
-            <p className="text-lg text-gray-300">{user?.email}</p>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-200 mb-4">Username</h2>
-          <div className="flex gap-4 items-center">
-            {isEditingUsername ? (
-              <>
-                <Input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  error={errors.username}
-                />
-                <button
-                  onClick={handleSaveUsername}
-                  className="bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600"
-                  disabled={isLoading}
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => {
-                    setIsEditingUsername(false);
-                    setErrors((prev) => ({ ...prev, username: "" }));
-                  }}
-                  className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 cursor-not-allowed text-gray-300"
-                  value={username}
-                  readOnly
-                />
-                <button
-                  onClick={() => setIsEditingUsername(true)}
-                  className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
-                >
-                  Change
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-200 mb-4">Password</h2>
-          <div className="flex flex-col gap-4">
-            {isEditingPassword ? (
-              <>
-                <Input
-                  type="password"
-                  label="New Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  error={errors.password}
-                />
-                <Input
-                  type="password"
-                  label="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  error={errors.password}
-                />
-                <div className="flex gap-4">
-                  <button
-                    onClick={handleSavePassword}
-                    className="bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600"
-                    disabled={isLoading}
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsEditingPassword(false);
-                      setPassword("");
-                      setConfirmPassword("");
-                      setErrors((prev) => ({ ...prev, password: "" }));
-                    }}
-                    className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none cursor-not-allowed"
-                  readOnly
-                />
-                <button
-                  onClick={() => setIsEditingPassword(true)}
-                  className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600"
-                >
-                  Change
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        <div>
-  <h2 className="text-lg font-semibold text-gray-200 mb-4">Discord</h2>
-  {user?.discordId ? (
-    <div className="flex items-center gap-4">
-      {discordAvatar && (
+    <div className="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+  <div className="mt-12 w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] max-w-4xl bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6 lg:p-8">
+    <div className="mb-6 text-center">
+      <div className="relative inline-block">
         <img
-          src={discordAvatar}
-          alt="Discord Avatar"
-          className="w-10 h-10 rounded-full"
+          src={user?.profilePicture || pfp}
+          alt="Profile"
+          className="w-24 h-24 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full object-cover border-gray-700 border-4"
         />
-      )}
-      <p className="text-gray-100">{discordUsername}</p>
-    </div>
-  ) : (
-    <button
-      onClick={() => {
-        const userId = user?._id;
-        window.location.href = `/.netlify/functions/auth-discord?userId=${userId}`;
-      }}
-      className="bg-blue-600 text-white rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-blue-700"
-    >
-      <FaDiscord className="w-5 h-5" />
-      Connect Discord
-    </button>
-  )}
-</div>
+        <label
+          htmlFor="profilePictureInput"
+          className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full p-1 sm:p-2 cursor-pointer hover:bg-blue-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M15.232 5H21a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V7a2 2 0 012-2h5.768M16 3l-4 4m0 0l-4-4m4 4V15"
+            />
+          </svg>
+        </label>
+        <input
+          id="profilePictureInput"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleProfilePictureChange}
+        />
+      </div>
+      <div className="mt-4">
+        <h2 className="text-xs sm:text-sm font-semibold text-gray-400">Email</h2>
+        <p className="text-base sm:text-lg text-gray-300">{user?.email}</p>
       </div>
     </div>
+
+    <div className="mb-6 lg:mb-8">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-200 mb-2 lg:mb-4">Username</h2>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
+        {isEditingUsername ? (
+          <>
+            <div className="w-full">
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                error={errors.username}
+              />
+            </div>
+            <div className="flex gap-2 mt-2 sm:mt-0">
+              <button
+                onClick={handleSaveUsername}
+                className="bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600 text-sm sm:text-base"
+                disabled={isLoading}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditingUsername(false);
+                  setErrors((prev) => ({ ...prev, username: "" }));
+                }}
+                className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 text-sm sm:text-base"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <input
+              type="text"
+              className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 cursor-not-allowed text-gray-300"
+              value={username}
+              readOnly
+            />
+            <button
+              onClick={() => setIsEditingUsername(true)}
+              className="mt-2 sm:mt-0 bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 text-sm sm:text-base"
+            >
+              Change
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+
+    <div className="mb-6 lg:mb-8">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-200 mb-2 lg:mb-4">Password</h2>
+      <div className="flex flex-col gap-2 lg:gap-4">
+        {isEditingPassword ? (
+          <>
+            <Input
+              type="password"
+              label="New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={errors.password}
+            />
+            <Input
+              type="password"
+              label="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              error={errors.password}
+            />
+            <div className="flex gap-2 sm:gap-4">
+              <button
+                onClick={handleSavePassword}
+                className="bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600 text-sm sm:text-base"
+                disabled={isLoading}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditingPassword(false);
+                  setPassword("");
+                  setConfirmPassword("");
+                  setErrors((prev) => ({ ...prev, password: "" }));
+                }}
+                className="bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-600 text-sm sm:text-base"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <input
+              type="password"
+              placeholder="********"
+              className="w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none cursor-not-allowed"
+              readOnly
+            />
+            <button
+              onClick={() => setIsEditingPassword(true)}
+              className="bg-blue-500 text-white rounded-lg px-4 py-2 hover:bg-blue-600 text-base"
+            >
+              Change
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+
+    <div>
+      <h2 className="text-base sm:text-lg font-semibold text-gray-200 mb-2 lg:mb-4">Discord</h2>
+      {user?.discordId ? (
+        <div className="flex items-center gap-4">
+          {discordAvatar && (
+            <img
+              src={discordAvatar}
+              alt="Discord Avatar"
+              className="w-10 h-10 rounded-full"
+            />
+          )}
+          <p className="text-gray-100 text-base">{discordUsername}</p>
+        </div>
+      ) : (
+        <button
+          onClick={() => {
+            const userId = user?._id;
+            window.location.href = `/.netlify/functions/auth-discord?userId=${userId}`;
+          }}
+          className="bg-blue-600 text-white rounded-lg px-4 py-2 flex items-center gap-2 hover:bg-blue-700 text-base"
+        >
+          <FaDiscord className="w-5 h-5" />
+          Connect Discord
+        </button>
+      )}
+    </div>
+  </div>
+</div>
   );
 };
 

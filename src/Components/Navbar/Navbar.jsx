@@ -8,6 +8,7 @@ import { RiLoginCircleFill } from "react-icons/ri";
 import logo from "../../assets/logo/Horizontalwithbgsmall.png";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpenNav, setIsOpenNav] = useState(false);
@@ -26,6 +27,13 @@ export default function Navbar() {
     window.location.reload();
   };
 
+  const location = useLocation();
+  
+  
+    
+  useEffect(() => {
+      setDropdownOpen(false);
+  }, [location]);
   return (
     <nav className="md:border-b-4 md:border-b-gray-950 flex items-center justify-between h-16 w-full px-4 sm:px-10 lg:px-20 bg-gray-900 text-white fixed z-50 shadow-lg">
       <div className="text-xl font-semibold logo">
