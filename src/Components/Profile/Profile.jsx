@@ -179,35 +179,48 @@ const Profile = () => {
     }
 };
 
-  const handleProfilePictureChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("profilePicture", file);
-      formData.append("userId", user._id);
+const handleProfilePictureChange = async (e) => {
+  const file = e.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+
+  reader.onload = async () => {
+      const base64Image = reader.result.split(",")[1]; 
+      const mimeType = file.type; 
+
+      const payload = {
+          userId: user._id,
+          imageBase64: base64Image,
+          mimeType, 
+      };
 
       try {
-        const response = await fetch("/.netlify/functions/updateProfilePicture", {
-          method: "PUT",
-          body: formData,
-        });
+          const response = await fetch("/.netlify/functions/updateProfilePicture", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (response.ok) {
-          setUser((prevUser) => ({
-            ...prevUser,
-            profilePicture: data.user.profilePicture,
-          }));
-          localStorage.setItem("user", JSON.stringify(data.user));
-        } else {
-          alert(data.message);
-        }
+          if (response.ok) {
+              setUser((prevUser) => ({
+                  ...prevUser,
+                  profilePicture: data.user.profilePicture,
+              }));
+              localStorage.setItem("user", JSON.stringify(data.user));
+          } else {
+              alert(data.message);
+          }
       } catch (error) {
-        console.error("Error updating profile picture:", error);
+          console.error("Error updating profile picture:", error);
       }
-    }
   };
+};
+
 
   return (
     <div className="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">

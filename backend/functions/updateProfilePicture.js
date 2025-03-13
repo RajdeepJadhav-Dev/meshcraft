@@ -1,17 +1,31 @@
-const UserSchema = require('../models/user'); 
-const connectDB = require('../config/db');
-
-
+const UserSchema = require("../models/user");
+const connectDB = require("../config/db");
 
 exports.handler = async (event) => {
     await connectDB();
+
+    if (event.httpMethod !== "PUT") {
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ message: "Method Not Allowed" }),
+        };
+    }
+
     try {
         const { userId, imageBase64, mimeType } = JSON.parse(event.body);
 
         if (!userId || !imageBase64 || !mimeType) {
             return {
                 statusCode: 400,
-                body: JSON.stringify("User ID, image, and MIME type are required")
+                body: JSON.stringify({ message: "User ID, image, and MIME type are required" }),
+            };
+        }
+
+        const allowedMimeTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
+        if (!allowedMimeTypes.includes(mimeType)) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: "Unsupported image format" }),
             };
         }
 
@@ -26,7 +40,7 @@ exports.handler = async (event) => {
         if (!updatedUser) {
             return {
                 statusCode: 404,
-                body: JSON.stringify("User not found")
+                body: JSON.stringify({ message: "User not found" }),
             };
         }
 
@@ -34,14 +48,14 @@ exports.handler = async (event) => {
             statusCode: 200,
             body: JSON.stringify({
                 message: "Profile picture updated successfully",
-                user: updatedUser
-            })
+                user: updatedUser,
+            }),
         };
     } catch (err) {
         console.error("Error:", err);
         return {
             statusCode: 500,
-            body: JSON.stringify("Error updating profile picture")
+            body: JSON.stringify({ message: "Error updating profile picture" }),
         };
     }
 };
