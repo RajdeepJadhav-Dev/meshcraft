@@ -48,7 +48,7 @@ const FeaturedCollections = () => {
                 <motion.img
                   src={collection.image}
                   alt={collection.title}
-                  className="h-80 w-80 object-cover"
+                  className="h-full w-full object-cover"
                   whileHover={{ scale: 1.1 }}
                   transition={{ type: "spring", stiffness: 150 }}
                 />
