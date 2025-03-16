@@ -22,16 +22,9 @@ const AdminHome = () => {
     createAsset 
   } = useContext(authContext);
 
-  // Sidebar toggle state for small screens
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Toggle sidebar dropdown
-  const toggleSidebar = () => {
-    setSidebarOpen(prev => !prev);
-  };
-
-  // Handle file selection (optional image/file preview)
-  const handleFileChange = (e) => {
+   // Handle file selection (optional image/file preview)
+   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const objectUrl = URL.createObjectURL(file);
@@ -39,38 +32,60 @@ const AdminHome = () => {
     }
   };
 
+
   // Generic change handler for form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAssetData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === 'walkModelUrls') {
+      // Split comma-separated input into an array of URLs
+      const urlsArray = value.split(',').map((url) => url.trim());
+      setAssetData((prev) => ({
+        ...prev,
+        walkModelUrls: urlsArray,
+      }));
+    } else if (['objects', 'vertices', 'edges', 'faces', 'triangles'].includes(name)) {
+      // If the input name corresponds to a technical field,
+      // we'll store it at the top level first, then use it in handleSubmit
+      setAssetData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      // Default field update
+      setAssetData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   // Final form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Convert scale and rotation fields into arrays
     const scaleArray = [
       parseFloat(assetData.scaleX) || 1,
       parseFloat(assetData.scaleY) || 1,
-      parseFloat(assetData.scaleZ) || 1
+      parseFloat(assetData.scaleZ) || 1,
     ];
     const rotationArray = [
       parseFloat(assetData.rotationX) || 0,
       parseFloat(assetData.rotationY) || 0,
-      parseFloat(assetData.rotationZ) || 0
+      parseFloat(assetData.rotationZ) || 0,
     ];
 
+    // Build the object to send to the server
     const newAsset = {
       title: assetData.title,
       description: assetData.description,
-      extendedDescription: assetData.extendedDescription,
+      extendedDescription: assetData.extendedDescription, 
       poly: assetData.poly,
       price: assetData.price,
       modelUrl: assetData.modelUrl,
-      walkModelUrl: assetData.walkModelUrl,
+      // Now this is an array of URLs
+      walkModelUrls: assetData.walkModelUrls || [],
       software: assetData.software,
       softwareLogo: assetData.softwareLogo,
       scale: scaleArray,
@@ -80,31 +95,65 @@ const AdminHome = () => {
         vertices: parseInt(assetData.vertices) || 0,
         edges: parseInt(assetData.edges) || 0,
         faces: parseInt(assetData.faces) || 0,
-        triangles: parseInt(assetData.triangles) || 0
+        triangles: parseInt(assetData.triangles) || 0,
       }
     };
 
+    // Call createAsset from context
     createAsset(newAsset);
     setOpen(true);
 
-    
+    // Clear out the form and preview
+    setAssetData({
+      title: "",
+      description: "",
+      extendedDescription: "",
+      poly: "",
+      price: "",
+      modelUrl: "",
+      walkModelUrls: [], // reset to an empty array
+      software: "",
+      softwareLogo: "",
+      scaleX: "",
+      scaleY: "",
+      scaleZ: "",
+      rotationX: "",
+      rotationY: "",
+      rotationZ: "",
+      objects: "",
+      vertices: "",
+      edges: "",
+      faces: "",
+      triangles: "",
+    });
     setPreviewSrc("");
   };
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    try {
-     
-      localStorage.removeItem("token");
-     
-      navigate("/");
-    } catch (error) {
-      console.error("Error during logout", error);
-    }
-  };
-  return (
-    <div className="min-h-screen bg-[#1d1e28] p-2 text-white relative">
-      <div className="container  px-2 py-5">
-        {/* Floating Sidebar Button for Mobile */}
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+     const toggleSidebar = () => {
+       setSidebarOpen(prev => !prev);
+     };
+     const handleLogout = async () => {
+       try {
+         const response = await fetch("http://localhost:5000/auth/logout", {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+         });
+         const data = await response.json();
+         console.log(data.message); 
+   
+         localStorage.removeItem("token");
+        
+         navigate("/");
+       } catch (error) {
+        navigate("/");
+         console.error("Error during logout", error);
+       }
+     };
+     return (
+      <div className='p-3 text-white '>
         <div className="md:hidden fixed top-4 left-4 z-50">
                 <button
                   onClick={toggleSidebar}
@@ -122,7 +171,7 @@ const AdminHome = () => {
               {sidebarOpen && (
                 <div className="md:hidden fixed top-20 left-4 bg-[#1b1e33] rounded-lg shadow-lg p-4 z-40">
                   <ul className="space-y-2">
-                   
+                    
                     <li>
                       <a href="/admin" className="block text-gray-200 hover:text-white">
                         Add Assets
@@ -144,46 +193,49 @@ const AdminHome = () => {
                       </a>
                     </li>
                     <li>
-                      <button onClick={handleLogout}>Logout</button>
-                    </li>
+                              <button className='text-gray-200' onClick={handleLogout}>Logout</button>
+                            </li>
                   </ul>
                 </div>
               )}
-
         {/* HEADER */}
         <header className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <Dialog title={assetData.title} description={assetData.description} />
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-white pt-5  ">Dashboard</h1>
             <p className="text-sm mt-1 text-[#5B5A99]">
               Add any type of asset in just a click
             </p>
           </div>
           <div className="flex items-center gap-4 justify-center">
-            {/* <div className="hidden sm:flex items-center px-4 gap-2 py-2 bg-gradient-to-r from-pink-500 to-purple-600 
-              rounded-full shadow-xl cursor-pointer hover:scale-105 transition-transform">
-              <FaBell className="text-white text-sm" />
-              <h1 className="text-white text-sm mb-0.5">15</h1>
-            </div> */}
+            
             <div className="hidden sm:flex items-center space-x-2 cursor-pointer">
               <img
                 src={Face}
                 alt="profile"
                 className="w-8 h-8 object-cover shadow-2xl drop-shadow-lg rounded-full"
               />
-              <span className="text-sm font-medium text-[#5B5A99]">Admin</span>
+              <span className="text-sm font-medium text-[#5B5A99]">John Doe</span>
             </div>
+
             <div onClick={handleLogout} className="hidden sm:flex items-center space-x-2 cursor-pointer">
-              <img src={Logout} alt="logout" className="w-6 h-6" />
-              <span className="text-sm font-medium text-[#5B5A99]">Logout</span>
-            </div>
+             
+
+             
+                <img src={Logout} alt="logout" className="w-6 h-6" />
+                <span className="text-sm font-medium text-[#5B5A99]">Logout</span>
+              </div>
+
+  
+            
           </div>
         </header>
-
+  
         {/* CARDS SECTION */}
-        {/* <section className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <section className="mt-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Example Cards */}
           <div className="cursor-pointer hover:bg-gradient-to-r from-[#0B98C5] via-[#11AADF] to-[#14BAE3]
-            border border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
+            border-solid border-3 border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <h2 className="text-sm text-gray-200">New Assets Added</h2>
               <IoNewspaper className="text-yellow-400 text-2xl" />
@@ -194,7 +246,7 @@ const AdminHome = () => {
             </div>
           </div>
           <div className="cursor-pointer hover:bg-gradient-to-r from-[#0B98C5] via-[#11AADF] to-[#14BAE3]
-            border border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
+            border-solid border-3 border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <h2 className="text-sm text-gray-200">Total Assets Added</h2>
               <SiVirustotal className="text-blue-400 text-2xl" />
@@ -205,7 +257,7 @@ const AdminHome = () => {
             </div>
           </div>
           <div className="cursor-pointer hover:bg-gradient-to-r from-[#0B98C5] via-[#11AADF] to-[#14BAE3]
-            border border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
+            border-solid border-3 border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <h2 className="text-sm text-gray-200">Total Earning</h2>
               <FaWallet className="text-green-400 text-2xl" />
@@ -216,17 +268,19 @@ const AdminHome = () => {
             </div>
           </div>
           <div className="cursor-pointer hover:bg-gradient-to-r from-[#0B98C5] via-[#11AADF] to-[#14BAE3]
-            border border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
+            border-solid border-3 border-[#312F62] p-4 rounded-xl shadow-lg flex flex-col justify-center">
             <h2 className="text-sm text-gray-200">Additional</h2>
             <p className="text-xs text-gray-400">Expand your portfolio</p>
           </div>
-        </section> */}
-
+        </section>
+  
         {/* 2-COLUMN LAYOUT FOR FORM & PREVIEW */}
-        <section className="mt-8">
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-[#2b2e4a] p-6 rounded-xl shadow-lg">
-              <h2 className="text-xl font-bold text-white mb-4">Add Assets (Part 1)</h2>
+        <section className="mt-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* LEFT COLUMN: Basic fields and Extended Description */}
+            <div className="bg-[#2b2e4a] p-4 rounded-xl shadow-lg">
+              <h2 className="text-lg font-bold text-white mb-4">Add Assets (Part 1)</h2>
+              {/* Title */}
               <div className="mb-4">
                 <label className="block text-gray-300 text-sm mb-2" htmlFor="assetName">
                   Asset Name
@@ -241,6 +295,7 @@ const AdminHome = () => {
                   onChange={handleChange}
                 />
               </div>
+              {/* Description */}
               <div className="mb-4">
                 <label className="block text-gray-300 text-sm mb-2" htmlFor="assetDescription">
                   Asset Description
@@ -254,6 +309,7 @@ const AdminHome = () => {
                   onChange={handleChange}
                 />
               </div>
+              {/* Extended Description */}
               <div className="mb-4">
                 <label className="block text-gray-300 text-sm mb-2" htmlFor="extendedDescription">
                   Extended Description
@@ -267,6 +323,7 @@ const AdminHome = () => {
                   onChange={handleChange}
                 />
               </div>
+              {/* Poly */}
               <div className="mb-4">
                 <label className="block text-gray-300 text-sm mb-2" htmlFor="poly">
                   Poly Type (e.g. "Low Poly")
@@ -281,6 +338,7 @@ const AdminHome = () => {
                   onChange={handleChange}
                 />
               </div>
+              {/* Price */}
               <div className="mb-4">
                 <label className="block text-gray-300 text-sm mb-2" htmlFor="price">
                   Price
@@ -296,8 +354,10 @@ const AdminHome = () => {
                 />
               </div>
             </div>
-
-            <div className="flex flex-col gap-6">
+  
+            {/* RIGHT COLUMN: Image Preview on top and remaining fields below */}
+            <div className="flex flex-col gap-4">
+              {/* IMAGE PREVIEW */}
               <div className="shadow-2xl drop-shadow-2xl border-2 border-dashed border-gray-500 rounded-xl h-64 w-full flex items-center justify-center">
                 {previewSrc ? (
                   <img
@@ -309,8 +369,10 @@ const AdminHome = () => {
                   <p className="text-gray-400">Image Preview</p>
                 )}
               </div>
-              <div className="bg-[#2b2e4a] p-6 rounded-xl shadow-lg">
-                <h2 className="text-xl font-bold text-white mb-4">Add Assets (Part 2)</h2>
+              {/* Remaining Fields */}
+              <div className="bg-[#2b2e4a] p-4 rounded-xl shadow-lg">
+                <h2 className="text-lg font-bold text-white mb-4">Add Assets (Part 2)</h2>
+                {/* Model URL */}
                 <div className="mb-4">
                   <label className="block text-gray-300 text-sm mb-2" htmlFor="modelUrl">
                     Model URL
@@ -325,20 +387,22 @@ const AdminHome = () => {
                     onChange={handleChange}
                   />
                 </div>
+                {/* Walk Model URLs (multiple URLs) */}
                 <div className="mb-4">
-                  <label className="block text-gray-300 text-sm mb-2" htmlFor="walkModelUrl">
-                    Walk Model URL
+                  <label className="block text-gray-300 text-sm mb-2" htmlFor="walkModelUrls">
+                    Animation/Walk Model URLs (comma separated)
                   </label>
                   <input
                     className="w-full p-2 rounded bg-[#1b1e33] text-white focus:outline-none"
                     type="text"
-                    id="walkModelUrl"
-                    name="walkModelUrl"
-                    placeholder="/3dfiles/malezombiewalk.glb"
-                    value={assetData.walkModelUrl}
+                    id="walkModelUrls"
+                    name="walkModelUrls"
+                    placeholder="/3dfiles/anim1.glb, /3dfiles/anim2.glb"
+                    value={assetData.walkModelUrls?.join(', ')}
                     onChange={handleChange}
                   />
                 </div>
+                {/* Software */}
                 <div className="mb-4">
                   <label className="block text-gray-300 text-sm mb-2" htmlFor="software">
                     Software
@@ -353,6 +417,7 @@ const AdminHome = () => {
                     onChange={handleChange}
                   />
                 </div>
+                {/* Software Logo */}
                 <div className="mb-4">
                   <label className="block text-gray-300 text-sm mb-2" htmlFor="softwareLogo">
                     Software Logo URL
@@ -367,6 +432,7 @@ const AdminHome = () => {
                     onChange={handleChange}
                   />
                 </div>
+                {/* Scale (scaleX, scaleY, scaleZ) */}
                 <div className="mb-4 grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-gray-300 text-sm mb-1" htmlFor="scaleX">Scale X</label>
@@ -408,6 +474,7 @@ const AdminHome = () => {
                     />
                   </div>
                 </div>
+                {/* Rotation (rotationX, rotationY, rotationZ) */}
                 <div className="mb-4 grid grid-cols-3 gap-2">
                   <div>
                     <label className="block text-gray-300 text-sm mb-1" htmlFor="rotationX">Rot X</label>
@@ -449,6 +516,7 @@ const AdminHome = () => {
                     />
                   </div>
                 </div>
+                {/* File Upload (Optional) */}
                 <div className="mb-4">
                   <label className="block text-gray-300 text-sm mb-2" htmlFor="assetFile">
                     Upload Asset File (Optional)
@@ -461,8 +529,9 @@ const AdminHome = () => {
                     onChange={handleFileChange}
                   />
                 </div>
+                {/* Technical Details */}
                 <h3 className="text-md font-bold text-white mb-2 mt-6">Technical (Required)</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <div className="grid grid-cols-3 gap-2 text-xs">
                   {["objects", "vertices", "edges", "faces", "triangles"].map(field => (
                     <div key={field}>
                       <label className="block text-gray-400 capitalize">{field}</label>
@@ -470,13 +539,14 @@ const AdminHome = () => {
                         type="text"
                         name={field}
                         placeholder="0"
-                        value={assetData.technical?.[field] || ""}
+                        value={assetData[field] || ""} 
                         onChange={handleChange}
                         className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
                       />
                     </div>
                   ))}
                 </div>
+                {/* Submit Button */}
                 <button
                   type="submit"
                   className="mt-6 w-full px-6 py-2 text-white font-semibold rounded-full bg-gray-900 border-2 border-green-400 shadow-[0_0_10px_rgba(0,255,127,0.8)] hover:shadow-[0_0_20px_rgba(0,255,127,1)] transition-all duration-300 ease-in-out"
@@ -488,8 +558,8 @@ const AdminHome = () => {
           </form>
         </section>
       </div>
-    </div>
-  );
-};
+    );
+  };
+  
 
 export default AdminHome;

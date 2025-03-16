@@ -37,12 +37,10 @@ const assetSchema = new Schema({
     // e.g. "/3dfiles/camp1fire.glb"
     required: false
   },
-  walkModelUrl: {
-    // new field for the walking animation model
-    type: String,
-    trim: true,
+  walkModelUrls: {
+    type: [String],
     required: false,
-    default: "" // defaults to empty string if not provided
+    default: []
   },
   software: {
     type: String,

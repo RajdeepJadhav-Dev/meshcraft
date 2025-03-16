@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const discordRoutes = require('./routes/discordRoutes');
 const assetRoutes = require('./routes/assetRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const threeRoutes = require('./routes/threeRoutes');
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ app.use('/user', userRoutes);
 app.use('/discord', discordRoutes);
 app.use('/assets',assetRoutes);
 app.use('/admin', adminRoutes);
+app.use('/three', threeRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

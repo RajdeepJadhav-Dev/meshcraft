@@ -17,7 +17,7 @@ const AuthState = (props) => {
     poly: "",
     price: "",
     modelUrl: "",
-    walkModelUrl: "",
+    walkModelUrls: [],
     software: "",
     softwareLogo: "",
     scaleX: "",

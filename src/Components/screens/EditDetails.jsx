@@ -91,176 +91,176 @@ const EditDetails = () => {
   };
   return (
     <div className="p-6 text-white max-w-4xl mx-auto">
-      {/* Mobile Sidebar Toggle */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-              <button
-                onClick={toggleSidebar}
-                className="p-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-xl hover:scale-105 transition-transform"
-              >
-                {sidebarOpen ? (
-                  <FaTimes className="text-white text-xl" />
-                ) : (
-                  <FaBars className="text-white text-xl" />
-                )}
-              </button>
-            </div>
-      
-            {/* Mobile Sidebar Dropdown Menu */}
-            {sidebarOpen && (
-                <div className="md:hidden fixed top-20 left-4 bg-[#1b1e33] rounded-lg shadow-lg p-4 z-40">
-                  <ul className="space-y-2">
-                   
-                    <li>
-                      <a href="/admin" className="block text-gray-200 hover:text-white">
-                        Add Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/editassets" className="block text-gray-200 hover:text-white">
-                        Edit Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/deleteassets" className="block text-gray-200 hover:text-white">
-                        Delete Assets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/admin/profile" className="block text-gray-200 hover:text-white">
-                        Profile
-                      </a>
-                    </li>
-                    <li>
-                      <button onClick={handleLogout}>Logout</button>
-                    </li>
-                  </ul>
-                </div>
+    {/* Mobile Sidebar Toggle */}
+    <div className="md:hidden fixed top-4 left-4 z-50">
+            <button
+              onClick={toggleSidebar}
+              className="p-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-xl hover:scale-105 transition-transform"
+            >
+              {sidebarOpen ? (
+                <FaTimes className="text-white text-xl" />
+              ) : (
+                <FaBars className="text-white text-xl" />
               )}
-      {/* HEADER */}
-      <header className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <Dialog title={assetData.title} description={assetData.description} />
-        <div className="text-center sm:text-left">
-          <h1 className="text-3xl font-bold">Edit Details here</h1>
-          <p className="text-sm mt-1 text-[#5B5A99]">
-            Add any type of asset in just a click
-          </p>
-        </div>
-        <div className="flex items-center gap-4 justify-center">
-          <div className="hidden sm:flex items-center space-x-2 cursor-pointer">
-            <img
-              src={Face}
-              alt="profile"
-              className="w-8 h-8 object-cover shadow-2xl drop-shadow-lg rounded-full"
-            />
-            <span className="text-sm font-medium text-[#5B5A99]">Admin</span>
+            </button>
           </div>
-          <div onClick={handleLogout} className="hidden sm:flex items-center space-x-2 cursor-pointer">
-              <img src={Logout} alt="logout" className="w-6 h-6" />
-              <span className="text-sm font-medium text-[#5B5A99]">Logout</span>
+    
+          {/* Mobile Sidebar Dropdown Menu */}
+          {sidebarOpen && (
+            <div className="md:hidden fixed top-20 left-4 bg-[#1b1e33] rounded-lg shadow-lg p-4 z-40">
+              <ul className="space-y-2">
+               
+                <li>
+                  <a href="/admin" className="block text-gray-200 hover:text-white">
+                    Add Assets
+                  </a>
+                </li>
+                <li>
+                  <a href="/admin/editassets" className="block text-gray-200 hover:text-white">
+                    Edit Assets
+                  </a>
+                </li>
+                <li>
+                  <a href="/admin/deleteassets" className="block text-gray-200 hover:text-white">
+                    Delete Assets
+                  </a>
+                </li>
+                <li>
+                  <a href="/admin/profile" className="block text-gray-200 hover:text-white">
+                    Profile
+                  </a>
+                </li>
+                <li>
+                    <button className='text-gray-200' onClick={handleLogout}>Logout</button>
+                  </li>
+              </ul>
             </div>
-        </div>
-      </header>
-
-
-      {/* IMAGE PREVIEW AND UPLOAD */}
-      <div className="flex flex-col md:flex-row items-center gap-6 mt-6">
-        <div className="relative">
+          )}
+    {/* HEADER */}
+    <header className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <Dialog title={assetData.title} description={assetData.description} />
+      <div className="text-center sm:text-left">
+        <h1 className="text-3xl font-bold">Edit Details here</h1>
+        <p className="text-sm mt-1 text-[#5B5A99]">
+          Add any type of asset in just a click
+        </p>
+      </div>
+      <div className="flex items-center gap-4 justify-center">
+        <div className="hidden sm:flex items-center space-x-2 cursor-pointer">
           <img
-            src={imagePreview}
-            alt="Asset Preview"
-            className="w-48 h-48 object-cover rounded-lg shadow-xl border-2 border-purple-500"
+            src={Face}
+            alt="profile"
+            className="w-8 h-8 object-cover shadow-2xl drop-shadow-lg rounded-full"
           />
+          <span className="text-sm font-medium text-[#5B5A99]">Admin</span>
         </div>
-        <div className="w-full">
-          <label className="text-gray-300 text-sm">Upload New Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none cursor-pointer"
-          />
-        </div>
+        <div onClick={handleLogout} className="hidden sm:flex items-center space-x-2 cursor-pointer">
+            <img src={Logout} alt="logout" className="w-6 h-6" />
+            <span className="text-sm font-medium text-[#5B5A99]">Logout</span>
+          </div>
       </div>
+    </header>
 
-      {/* TITLE */}
-      <div className="mt-6">
-        <label className="text-gray-300 text-sm">Asset Title</label>
+
+    {/* IMAGE PREVIEW AND UPLOAD */}
+    <div className="flex flex-col md:flex-row items-center gap-6 mt-6">
+      <div className="relative">
+        <img
+          src={imagePreview}
+          alt="Asset Preview"
+          className="w-48 h-48 object-cover rounded-lg shadow-xl border-2 border-purple-500"
+        />
+      </div>
+      <div className="w-full">
+        <label className="text-gray-300 text-sm">Upload New Image</label>
         <input
-          type="text"
-          name="title"
-          value={asset.title}
-          onChange={handleChange}
-          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none cursor-pointer"
         />
-      </div>
-
-      {/* DESCRIPTION */}
-      <div className="mt-4">
-        <label className="text-gray-300 text-sm">Description</label>
-        <textarea
-          name="description"
-          value={asset.description}
-          onChange={handleChange}
-          rows="3"
-          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
-        />
-      </div>
-      <div className="mt-4">
-        <label className="text-gray-300 text-sm">Extended Description</label>
-        <textarea
-          name="extendedDescription"
-          value={asset.extendedDescription}
-          onChange={handleChange}
-          rows="3"
-          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
-        />
-      </div>
-      <div className="mt-6">
-        <label className="text-gray-300 text-sm">Poly</label>
-        <input
-          type="text"
-          name="poly"
-          value={asset.poly}
-          onChange={handleChange}
-          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
-        />
-      </div>
-
-      {/* TECHNICAL DETAILS */}
-      <div className="mt-6 p-4 bg-[#2b2e4a] rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-3">Technical Details</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {["objects", "vertices", "edges", "format", "faces", "triangles"].map((field) => (
-            <div key={field}>
-              <label className="text-gray-300 text-sm capitalize">{field}</label>
-              <input
-                type="text"
-                name={field}
-                value={asset.technical?.[field] || ""}
-                onChange={handleTechnicalChange}
-                className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ACTION BUTTONS */}
-      <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
-        <button
-          onClick={handleReset}
-          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-all"
-        >
-          Reset
-        </button>
-        <button
-          onClick={handleSave}
-          className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:scale-105 transition-all"
-        >
-          Save Changes
-        </button>
       </div>
     </div>
-  );
+
+    {/* TITLE */}
+    <div className="mt-6">
+      <label className="text-gray-300 text-sm">Asset Title</label>
+      <input
+        type="text"
+        name="title"
+        value={asset.title}
+        onChange={handleChange}
+        className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+      />
+    </div>
+
+    {/* DESCRIPTION */}
+    <div className="mt-4">
+      <label className="text-gray-300 text-sm">Description</label>
+      <textarea
+        name="description"
+        value={asset.description}
+        onChange={handleChange}
+        rows="3"
+        className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+      />
+    </div>
+    <div className="mt-4">
+      <label className="text-gray-300 text-sm">Extended Description</label>
+      <textarea
+        name="extendedDescription"
+        value={asset.extendedDescription}
+        onChange={handleChange}
+        rows="3"
+        className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+      />
+    </div>
+    <div className="mt-6">
+      <label className="text-gray-300 text-sm">Poly</label>
+      <input
+        type="text"
+        name="poly"
+        value={asset.poly}
+        onChange={handleChange}
+        className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+      />
+    </div>
+
+    {/* TECHNICAL DETAILS */}
+    <div className="mt-6 p-4 bg-[#2b2e4a] rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-3">Technical Details</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {["objects", "vertices", "edges", "format", "faces", "triangles"].map((field) => (
+          <div key={field}>
+            <label className="text-gray-300 text-sm capitalize">{field}</label>
+            <input
+              type="text"
+              name={field}
+              value={asset.technical?.[field] || ""}
+              onChange={handleTechnicalChange}
+              className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* ACTION BUTTONS */}
+    <div className="flex flex-col sm:flex-row justify-end gap-4 mt-6">
+      <button
+        onClick={handleReset}
+        className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-all"
+      >
+        Reset
+      </button>
+      <button
+        onClick={handleSave}
+        className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:scale-105 transition-all"
+      >
+        Save Changes
+      </button>
+    </div>
+  </div>
+);
 };
 export default EditDetails;

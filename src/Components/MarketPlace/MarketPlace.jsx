@@ -143,6 +143,8 @@ const FullscreenCard = ({ asset, onClose, filteredAssets, onAssetClick }) => {
                   modelUrl={asset.modelUrl}
                   scale={asset.scale}
                   rotation={asset.rotation}
+                  walkModelUrl={asset.walkModelUrl}
+                  
                 />
               </Suspense>
               <OrbitControls enableRotate={false} />

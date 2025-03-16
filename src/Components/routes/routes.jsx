@@ -19,6 +19,7 @@ import Footer from "../Footer/Footer";
 import { Outlet } from "react-router-dom";
 import ScrollToTop from "../ScrollToTop/ScrollToTop";
 import AdminLogin from "../AdminLogin/AdminLogin";
+import Layout from '../screens/Layout';
 
 const routes = [
   {
@@ -102,6 +103,11 @@ const routes = [
         path: "profile",
         element: <AdminProfile />,
       },
+      {
+        path: "layout",
+        element: <Layout />,
+      },
+      
     ],
   },
 ];

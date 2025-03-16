@@ -19,7 +19,7 @@ exports.createAsset = async (req, res) => {
           poly,
           price,
           modelUrl,
-          walkModelUrl, // NEW field
+          walkModelUrls, // NEW field
           software,
           softwareLogo,
           scale,
@@ -42,7 +42,7 @@ exports.createAsset = async (req, res) => {
           poly,
           price,
           modelUrl,
-          walkModelUrl, // include walkModelUrl
+          walkModelUrls, // include walkModelUrl
           software,
           softwareLogo,
           scale,
@@ -70,7 +70,7 @@ exports.updateAsset = async (req, res) => {
           poly,
           price,
           modelUrl,
-          walkModelUrl,
+          walkModelUrls,
           software,
           softwareLogo,
           scale,
@@ -94,7 +94,7 @@ exports.updateAsset = async (req, res) => {
             poly,
             price,
             modelUrl,
-            walkModelUrl,
+            walkModelUrls,
             software,
             softwareLogo,
             scale,
