@@ -7,57 +7,77 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import authContext from "../context/authContext";
 
-const Model = ({ idleModelUrl, walkModelUrl, rotation, isAnimating, isAnimatingWalk }) => {
+const Model = ({ modelUrl, rotation, isAnimating }) => {
   const [model, setModel] = useState(null);
-  const [animations, setAnimations] = useState([]);
-  const mixer = useRef();
-  const [currentUrl, setCurrentUrl] = useState(idleModelUrl);
-  const currentAction = useRef();
+  const mixerRef = useRef(null);
+  const animationsRef = useRef([]);
 
+  // Load model
   useEffect(() => {
+    if (!modelUrl) return;
+    
     const loader = new GLTFLoader();
-    const url = isAnimatingWalk ? walkModelUrl : idleModelUrl;
-    setCurrentUrl(url);
-
     loader.load(
-      url,
+      modelUrl,
       (gltf) => {
+        // Set model
         setModel(gltf.scene);
-        setAnimations(gltf.animations);
-        mixer.current = new THREE.AnimationMixer(gltf.scene);
         
+        // Store animations
         if (gltf.animations && gltf.animations.length > 0) {
-          // Stop any existing animation
-          if (currentAction.current) {
-            currentAction.current.stop();
+          animationsRef.current = gltf.animations;
+          
+          // Create mixer
+          const newMixer = new THREE.AnimationMixer(gltf.scene);
+          mixerRef.current = newMixer;
+          
+          // Play animation if isAnimating is true
+          if (isAnimating) {
+            const action = newMixer.clipAction(gltf.animations[0]);
+            action.play();
           }
-          // Play the first animation
-          currentAction.current = mixer.current.clipAction(gltf.animations[0]);
-          currentAction.current.play();
         }
       },
       undefined,
       (error) => console.error("Error loading model:", error)
     );
-  }, [idleModelUrl, walkModelUrl, isAnimating, isAnimatingWalk]);
+    
+    // Cleanup
+    return () => {
+      if (mixerRef.current) {
+        mixerRef.current.stopAllAction();
+      }
+    };
+  }, [modelUrl]);
 
+  // Handle animation state changes
+  useEffect(() => {
+    if (!mixerRef.current || animationsRef.current.length === 0) return;
+    
+    mixerRef.current.stopAllAction();
+    
+    if (isAnimating) {
+      const action = mixerRef.current.clipAction(animationsRef.current[0]);
+      action.play();
+    }
+  }, [isAnimating]);
+
+  // Update mixer on each frame
   useFrame((_, delta) => {
-    if (mixer.current) mixer.current.update(delta);
+    if (mixerRef.current) {
+      mixerRef.current.update(delta);
+    }
   });
 
   return model ? <primitive object={model} rotation={rotation} scale={1} /> : null;
 };
 
 const ModelViewer = ({
-  idleModelUrl,
-  walkModelUrl,
+  modelUrl,
   modelHeight,
   rotation,
   cameraPosition,
-  isAnimating,
-  isAnimatingWalk,
-  setIsAnimating,
-  setIsAnimatingWalk
+  isAnimating
 }) => {
   const [view, setView] = useState("front");
   const rotationMap = {
@@ -75,11 +95,9 @@ const ModelViewer = ({
         <Canvas camera={{ position: cameraPosition, fov: 50 }}>
           <Suspense fallback={null}>
             <Model
-              idleModelUrl={idleModelUrl}
-              walkModelUrl={walkModelUrl}
+              modelUrl={modelUrl}
               rotation={rotationMap[view]}
               isAnimating={isAnimating}
-              isAnimatingWalk={isAnimatingWalk}
             />
             <OrbitControls />
             <ambientLight intensity={0.5} />
@@ -87,7 +105,7 @@ const ModelViewer = ({
           </Suspense>
         </Canvas>
       </div>
-      <div className="invisible sm:flex absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-wrap gap-2 bg-gray-900 p-2 rounded-lg">
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-wrap gap-2 bg-gray-900 p-2 rounded-lg">
         {Object.keys(rotationMap).map((key) => (
           <button
             key={key}
@@ -135,14 +153,14 @@ const AssetDetailPage = () => {
   const asset = editAssetData.find((a) => a._id === id);
   const previousPath = "/marketplace";
 
-  // For zombie asset animation toggles
+  // For animation controls
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isAnimatingWalk, setIsAnimatingWalk] = useState(false);
-  const [selectedAnimation, setSelectedAnimation] = useState('idle');
+  const [selectedAnimation, setSelectedAnimation] = useState("idle");
+  const [activeModelUrl, setActiveModelUrl] = useState("");
 
   // Check if the asset has animations
-  const hasAnimations = Boolean(asset.walkModelUrl) || (asset.animations && asset.animations.length > 0);
-
+  const hasAnimations = asset && (asset.walkModelUrl || (asset.animations && asset.animations.length > 0));
+  console.log("walkModelUrl", asset.walkModelUrl);
   useEffect(() => {
     if (detailsRef.current) {
       const resizeObserver = new ResizeObserver((entries) => {
@@ -155,7 +173,17 @@ const AssetDetailPage = () => {
     }
   }, [asset]);
 
-  if (!asset) return <p className="text-white text-center mt-10">Asset not found</p>;
+  // Initialize active model URL
+  useEffect(() => {
+    if (asset) {
+      setActiveModelUrl(asset.modelUrl);
+    }
+  }, [asset]);
+
+  // Check if asset is undefined and return a loading state or error message
+  if (!asset) {
+    return <p className="text-white text-center mt-10">Asset not found</p>;
+  }
 
   const { title, extendedDescription, price, modelUrl, walkModelUrl, rotation = [0, 0, 0], technical } = asset;
 
@@ -170,33 +198,51 @@ const AssetDetailPage = () => {
   else if (title === "Campfire") cameraPosition = [0, 7, 50];
   else if (title === "Zombie") cameraPosition = [0, 0.1, 6];
 
+  // Handle animation selection change
+  const handleAnimationChange = (animType) => {
+    // Update selected animation type
+    setSelectedAnimation(animType);
+    
+    // Stop current animation
+    setIsAnimating(false);
+    
+    // Update the model URL based on the animation type
+    if (animType === "walk" && walkModelUrl) {
+      setActiveModelUrl(walkModelUrl);
+    } else {
+      setActiveModelUrl(modelUrl);
+    }
+    
+    // Add a small delay to ensure the model is fully loaded before starting animation
+    setTimeout(() => {
+      setIsAnimating(true);
+    }, 100);
+  };
+
+  // Toggle animation state
+  const toggleAnimation = (state) => {
+    setIsAnimating(state);
+  };
+
   return (
     <div className="bg-black min-h-screen text-white pt-20">
       <div className="relative flex flex-col lg:flex-row items-start justify-between gap-8 p-6">
         {/* Left Column: 3D Model */}
         <div className="w-full lg:w-2/3 flex flex-col items-start">
           <ModelViewer
-            idleModelUrl={modelUrl}
-            walkModelUrl={walkModelUrl}
+            modelUrl={activeModelUrl}
             modelHeight={modelHeight}
             rotation={rotation}
             cameraPosition={cameraPosition}
             isAnimating={isAnimating}
-            isAnimatingWalk={isAnimatingWalk}
-            setIsAnimating={setIsAnimating}
-            setIsAnimatingWalk={setIsAnimatingWalk}
           />
 
           {/* Show animation controls only if the asset has animations */}
           {hasAnimations && (
-            <div className="mt-4 flex space-x-2">
+            <div className="mt-4 flex flex-col space-y-2">
               <select 
                 value={selectedAnimation}
-                onChange={(e) => {
-                  setSelectedAnimation(e.target.value);
-                  setIsAnimating(false);
-                  setIsAnimatingWalk(false);
-                }}
+                onChange={(e) => handleAnimationChange(e.target.value)}
                 className="bg-gray-700 text-white px-4 py-2 rounded-lg"
               >
                 {asset.animations?.map((anim, index) => (
@@ -210,29 +256,32 @@ const AssetDetailPage = () => {
                   </>
                 )}
               </select>
-              <button
-                onClick={() => {
-                  if (selectedAnimation === 'idle') {
-                    setIsAnimating(true);
-                    setIsAnimatingWalk(false);
-                  } else {
-                    setIsAnimatingWalk(true);
-                    setIsAnimating(false);
-                  }
-                }}
-                className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition"
-              >
-                Start Animation
-              </button>
-              <button
-                onClick={() => {
-                  setIsAnimating(false);
-                  setIsAnimatingWalk(false);
-                }}
-                className="bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition"
-              >
-                Stop Animation
-              </button>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => toggleAnimation(true)}
+                  className={`
+                    bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] 
+                    text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg 
+                    hover:bg-gray-600 transition
+                    ${isAnimating ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                  disabled={isAnimating}
+                >
+                  Start Animation
+                </button>
+                <button
+                  onClick={() => toggleAnimation(false)}
+                  className={`
+                    bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] 
+                    text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg 
+                    hover:bg-gray-600 transition
+                    ${!isAnimating ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                  disabled={!isAnimating}
+                >
+                  Stop Animation
+                </button>
+              </div>
             </div>
           )}
 

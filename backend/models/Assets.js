@@ -37,6 +37,11 @@ const assetSchema = new Schema({
     // e.g. "/3dfiles/camp1fire.glb"
     required: false
   },
+  walkModelUrl:{
+    type: String,
+    trim: true,
+    required: false
+  },
   walkModelUrls: {
     type: [String],
     required: false,
