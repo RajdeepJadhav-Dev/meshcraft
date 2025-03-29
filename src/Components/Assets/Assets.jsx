@@ -1,84 +1,97 @@
 import React, { useContext, useEffect, useRef, useState, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Environment } from "@react-three/drei"; // Added Environment
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import authContext from "../context/authContext";
 
-const Model = ({ modelUrl, rotation, isAnimating }) => {
+const Model = ({ idleModelUrl, walkModelUrl, rotation, isAnimating, selectedAnimation }) => {
   const [model, setModel] = useState(null);
-  const mixerRef = useRef(null);
-  const animationsRef = useRef([]);
+  const mixer = useRef(null);
+  const actions = useRef({});
+  const modelRef = useRef(null);
+  const previousAnimStateRef = useRef(isAnimating);
 
-  // Load model
+  // Load appropriate model based on animation type
   useEffect(() => {
-    if (!modelUrl) return;
-    
     const loader = new GLTFLoader();
+    const url = selectedAnimation === 'walk' ? walkModelUrl : idleModelUrl;
+
+    if (!url) return;
+
     loader.load(
-      modelUrl,
+      url,
       (gltf) => {
-        // Set model
-        setModel(gltf.scene);
-        
-        // Store animations
+        if (modelRef.current) {
+          modelRef.current.parent?.remove(modelRef.current);
+          if (mixer.current) mixer.current.stopAllAction();
+          actions.current = {};
+        }
+
+        const newModel = gltf.scene;
+        modelRef.current = newModel;
+        setModel(newModel);
+
+        const newMixer = new THREE.AnimationMixer(newModel);
+        mixer.current = newMixer;
+
         if (gltf.animations && gltf.animations.length > 0) {
-          animationsRef.current = gltf.animations;
-          
-          // Create mixer
-          const newMixer = new THREE.AnimationMixer(gltf.scene);
-          mixerRef.current = newMixer;
-          
-          // Play animation if isAnimating is true
-          if (isAnimating) {
-            const action = newMixer.clipAction(gltf.animations[0]);
-            action.play();
+          gltf.animations.forEach((clip, index) => {
+            const action = newMixer.clipAction(clip);
+            const name = clip.name || `animation_${index}`;
+            actions.current[name] = action;
+          });
+
+          if (isAnimating && Object.keys(actions.current).length > 0) {
+            const firstAction = Object.values(actions.current)[0];
+            firstAction.reset().play();
           }
         }
       },
       undefined,
       (error) => console.error("Error loading model:", error)
     );
-    
-    // Cleanup
+
     return () => {
-      if (mixerRef.current) {
-        mixerRef.current.stopAllAction();
-      }
+      if (mixer.current) mixer.current.stopAllAction();
     };
-  }, [modelUrl]);
+  }, [idleModelUrl, walkModelUrl, selectedAnimation]);
 
   // Handle animation state changes
   useEffect(() => {
-    if (!mixerRef.current || animationsRef.current.length === 0) return;
-    
-    mixerRef.current.stopAllAction();
-    
-    if (isAnimating) {
-      const action = mixerRef.current.clipAction(animationsRef.current[0]);
-      action.play();
+    if (!mixer.current || Object.keys(actions.current).length === 0) return;
+
+    if (isAnimating !== previousAnimStateRef.current) {
+      if (isAnimating) {
+        const firstAction = Object.values(actions.current)[0];
+        firstAction.reset().fadeIn(0.5).play();
+      } else {
+        mixer.current.stopAllAction();
+      }
+      previousAnimStateRef.current = isAnimating;
     }
   }, [isAnimating]);
 
-  // Update mixer on each frame
+  // Update animations in the render loop
   useFrame((_, delta) => {
-    if (mixerRef.current) {
-      mixerRef.current.update(delta);
-    }
+    if (mixer.current) mixer.current.update(delta);
   });
 
-  return model ? <primitive object={model} rotation={rotation} scale={1} /> : null;
+  return model ? (
+    <>
+      <primitive object={model} rotation={rotation} scale={1} />
+      {/* Add enhanced lighting and environment */}
+      <ambientLight intensity={1.5} />
+      <directionalLight position={[10, 10, 5]} intensity={2} />
+      <spotLight position={[10, 15, 10]} angle={0.3} intensity={1.5} />
+      <Environment preset="sunset" />
+    </>
+  ) : null;
 };
 
-const ModelViewer = ({
-  modelUrl,
-  modelHeight,
-  rotation,
-  cameraPosition,
-  isAnimating
-}) => {
+const ModelViewer = ({ idleModelUrl, walkModelUrl, modelHeight, rotation, cameraPosition, isAnimating, setIsAnimating, selectedAnimation }) => {
   const [view, setView] = useState("front");
   const rotationMap = {
     front: rotation,
@@ -86,7 +99,7 @@ const ModelViewer = ({
     left: [rotation[0], rotation[1] + Math.PI / 2, rotation[2]],
     right: [rotation[0], rotation[1] - Math.PI / 2, rotation[2]],
     top: [Math.PI / 2, rotation[1], rotation[2]],
-    bottom: [-Math.PI / 2, rotation[1], rotation[2]]
+    bottom: [-Math.PI / 2, rotation[1], rotation[2]],
   };
 
   return (
@@ -95,13 +108,14 @@ const ModelViewer = ({
         <Canvas camera={{ position: cameraPosition, fov: 50 }}>
           <Suspense fallback={null}>
             <Model
-              modelUrl={modelUrl}
+              idleModelUrl={idleModelUrl}
+              walkModelUrl={walkModelUrl}
               rotation={rotationMap[view]}
               isAnimating={isAnimating}
+              selectedAnimation={selectedAnimation}
             />
             <OrbitControls />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[5, 5, 5]} intensity={1} />
+            {/* Lighting and Environment moved to Model component */}
           </Suspense>
         </Canvas>
       </div>
@@ -110,12 +124,7 @@ const ModelViewer = ({
           <button
             key={key}
             onClick={() => setView(key)}
-            className={`
-              bg-gray-700 text-white p-2 rounded w-20 h-12 
-              flex items-center justify-center
-              hover:bg-gray-600 transition
-              ${view === key ? 'ring-2 ring-orange-500' : ''}
-            `}
+            className={`bg-gray-700 text-white p-2 rounded w-20 h-12 flex items-center justify-center hover:bg-gray-600 transition ${view === key ? 'ring-2 ring-orange-500' : ''}`}
           >
             {key.charAt(0).toUpperCase() + key.slice(1)}
           </button>
@@ -147,20 +156,27 @@ const AssetDetailPage = () => {
   const navigate = useNavigate();
   const detailsRef = useRef(null);
   const [modelHeight, setModelHeight] = useState(790);
-
-  // Get assets from context and find the asset with matching _id
   const { editAssetData } = useContext(authContext);
   const asset = editAssetData.find((a) => a._id === id);
   const previousPath = "/marketplace";
 
-  // For animation controls
   const [isAnimating, setIsAnimating] = useState(false);
-  const [selectedAnimation, setSelectedAnimation] = useState("idle");
-  const [activeModelUrl, setActiveModelUrl] = useState("");
+  const [selectedAnimation, setSelectedAnimation] = useState('idle');
+  const [modelKey, setModelKey] = useState(0);
 
-  // Check if the asset has animations
   const hasAnimations = asset && (asset.walkModelUrl || (asset.animations && asset.animations.length > 0));
-  console.log("walkModelUrl", asset.walkModelUrl);
+
+  const handleAnimationChange = (newAnimationType) => {
+    setSelectedAnimation(newAnimationType);
+    setIsAnimating(false);
+    setModelKey(prev => prev + 1);
+  };
+
+  const toggleAnimation = (animateState) => {
+    console.log("Animation toggled:", animateState);
+    setIsAnimating(animateState);
+  };
+
   useEffect(() => {
     if (detailsRef.current) {
       const resizeObserver = new ResizeObserver((entries) => {
@@ -173,21 +189,12 @@ const AssetDetailPage = () => {
     }
   }, [asset]);
 
-  // Initialize active model URL
-  useEffect(() => {
-    if (asset) {
-      setActiveModelUrl(asset.modelUrl);
-    }
-  }, [asset]);
-
-  // Check if asset is undefined and return a loading state or error message
   if (!asset) {
     return <p className="text-white text-center mt-10">Asset not found</p>;
   }
 
   const { title, extendedDescription, price, modelUrl, walkModelUrl, rotation = [0, 0, 0], technical } = asset;
 
-  // Determine camera position based on title
   let cameraPosition = [0, 7, 11];
   if (title === "Windmill") cameraPosition = [0, 7, 30];
   else if (title === "Small Barracks") cameraPosition = [0, 7, 40];
@@ -197,50 +204,29 @@ const AssetDetailPage = () => {
   else if (title === "Granitor") cameraPosition = [0, 7, 1];
   else if (title === "Campfire") cameraPosition = [0, 7, 50];
   else if (title === "Zombie") cameraPosition = [0, 0.1, 6];
+  else if (title === "Knife") cameraPosition = [0, 0, 10]; // Adjusted for Knife
 
-  // Handle animation selection change
-  const handleAnimationChange = (animType) => {
-    // Update selected animation type
-    setSelectedAnimation(animType);
-    
-    // Stop current animation
-    setIsAnimating(false);
-    
-    // Update the model URL based on the animation type
-    if (animType === "walk" && walkModelUrl) {
-      setActiveModelUrl(walkModelUrl);
-    } else {
-      setActiveModelUrl(modelUrl);
-    }
-    
-    // Add a small delay to ensure the model is fully loaded before starting animation
-    setTimeout(() => {
-      setIsAnimating(true);
-    }, 100);
-  };
-
-  // Toggle animation state
-  const toggleAnimation = (state) => {
-    setIsAnimating(state);
-  };
+  const showAnimationControls = title === "Zombie" || title === "Female Zombie";
 
   return (
     <div className="bg-black min-h-screen text-white pt-20">
       <div className="relative flex flex-col lg:flex-row items-start justify-between gap-8 p-6">
-        {/* Left Column: 3D Model */}
         <div className="w-full lg:w-2/3 flex flex-col items-start">
           <ModelViewer
-            modelUrl={activeModelUrl}
+            key={modelKey}
+            idleModelUrl={modelUrl}
+            walkModelUrl={walkModelUrl}
             modelHeight={modelHeight}
             rotation={rotation}
             cameraPosition={cameraPosition}
             isAnimating={isAnimating}
+            setIsAnimating={setIsAnimating}
+            selectedAnimation={selectedAnimation}
           />
 
-          {/* Show animation controls only if the asset has animations */}
-          {hasAnimations && (
+          {showAnimationControls && hasAnimations && (
             <div className="mt-4 flex flex-col space-y-2">
-              <select 
+              <select
                 value={selectedAnimation}
                 onChange={(e) => handleAnimationChange(e.target.value)}
                 className="bg-gray-700 text-white px-4 py-2 rounded-lg"
@@ -259,24 +245,14 @@ const AssetDetailPage = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => toggleAnimation(true)}
-                  className={`
-                    bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] 
-                    text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg 
-                    hover:bg-gray-600 transition
-                    ${isAnimating ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
+                  className={`bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition ${isAnimating ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={isAnimating}
                 >
                   Start Animation
                 </button>
                 <button
                   onClick={() => toggleAnimation(false)}
-                  className={`
-                    bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] 
-                    text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg 
-                    hover:bg-gray-600 transition
-                    ${!isAnimating ? 'opacity-50 cursor-not-allowed' : ''}
-                  `}
+                  className={`bg-gradient-to-r from-[#fbb040] via-[#f46728] to-[#ed1c24] text-xl text-black px-4 py-2 rounded-lg flex items-center shadow-lg hover:bg-gray-600 transition ${!isAnimating ? 'opacity-50 cursor-not-allowed' : ''}`}
                   disabled={!isAnimating}
                 >
                   Stop Animation
@@ -295,7 +271,6 @@ const AssetDetailPage = () => {
           </div>
         </div>
 
-        {/* Right Column: Asset Details */}
         <div className="w-full lg:w-1/3 flex flex-col justify-start" ref={detailsRef}>
           <div className="bg-gray-800 p-6 rounded-lg shadow-md w-full text-center mb-4">
             <h1 className="text-2xl font-semibold text-white mb-2">{title}</h1>
