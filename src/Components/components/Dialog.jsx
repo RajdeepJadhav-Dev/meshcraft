@@ -39,10 +39,7 @@ const DialogShow = ({ title, description }) => {
     
 
 
-    if(loading){
-        return <h1>Loading...</h1>
-    }
-    
+
     return (
         <Dialog open={open} onClose={setOpen} className="relative z-10">
             <DialogBackdrop

@@ -6,7 +6,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import authContext from '../context/authContext';
 
 const DeleteAsset = () => {
-  const { editAssetData, deleteAsset,loading } = useContext(authContext);
+  const { editAssetData, deleteAsset } = useContext(authContext);
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
@@ -30,10 +30,7 @@ const DeleteAsset = () => {
   };
 
 
-  if(loading)
-  {
-    return <div className="text-white text-center text-2xl mt-10">Loading...</div>;
-  }
+
   return (
     <div className="relative">
       {/* Mobile Sidebar Toggle Button */}

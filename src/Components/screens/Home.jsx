@@ -19,18 +19,22 @@ const AdminHome = () => {
     previewSrc, 
     setPreviewSrc, 
     setOpen,
-    createAsset 
+    createAsset,
+    uploadThumbnail, 
   } = useContext(authContext);
 
 
+  const[thumbnailFile, setThumbnailFile] = useState(null);
    // Handle file selection (optional image/file preview)
    const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const objectUrl = URL.createObjectURL(file);
       setPreviewSrc(objectUrl);
+      setThumbnailFile(file); 
     }
   };
+
 
 
   // Generic change handler for form fields
@@ -61,7 +65,7 @@ const AdminHome = () => {
   };
 
   // Final form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Convert scale and rotation fields into arrays
@@ -97,10 +101,15 @@ const AdminHome = () => {
         faces: parseInt(assetData.faces) || 0,
         triangles: parseInt(assetData.triangles) || 0,
       }
+
     };
 
     // Call createAsset from context
-    createAsset(newAsset);
+    const createdAsset = await createAsset(newAsset);
+    if (thumbnailFile && createdAsset && createdAsset._id) {
+      await uploadThumbnail(createdAsset._id, thumbnailFile);
+    }
+
     setOpen(true);
 
     // Clear out the form and preview
@@ -127,6 +136,7 @@ const AdminHome = () => {
       triangles: "",
     });
     setPreviewSrc("");
+    setThumbnailFile(null); // Reset thumbnail file
   };
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -516,19 +526,22 @@ const AdminHome = () => {
                     />
                   </div>
                 </div>
-                {/* File Upload (Optional) */}
                 <div className="mb-4">
-                  <label className="block text-gray-300 text-sm mb-2" htmlFor="assetFile">
-                    Upload Asset File (Optional)
-                  </label>
-                  <input
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:outline-none bg-[#1b1e33] p-2 rounded"
-                    type="file"
-                    id="assetFile"
-                    name="assetFile"
-                    onChange={handleFileChange}
-                  />
-                </div>
+                <label className="block text-gray-300 text-sm mb-2" htmlFor="assetFile">
+                  Upload Asset File (Optional)
+                </label>
+                <input
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+                    file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100 focus:outline-none
+                    bg-[#1b1e33] p-2 rounded"
+                  type="file"
+                  id="assetFile"
+                  name="assetFile"
+                  onChange={handleFileChange}
+                />
+              </div>
                 {/* Technical Details */}
                 <h3 className="text-md font-bold text-white mb-2 mt-6">Technical (Required)</h3>
                 <div className="grid grid-cols-3 gap-2 text-xs">

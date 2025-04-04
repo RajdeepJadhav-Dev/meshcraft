@@ -15,7 +15,11 @@ const EditDetails = () => {
   const queryParams = new URLSearchParams(location.search);
   const assetId = queryParams.get("assetId");
 
-  const { editAssetData, updateAsset } = useContext(authContext);
+  const { editAssetData, updateAsset,
+          uploadThumbnail, editThumbnail,
+          
+
+   } = useContext(authContext);
 
   const assetData = editAssetData.find(asset => asset._id === assetId);
 
@@ -57,7 +61,7 @@ const EditDetails = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl);
-      setAsset(prev => ({ ...prev, image: file }));
+      setAsset(prev => ({ ...prev, newImageFile: file }));
     }
   };
 
@@ -70,6 +74,17 @@ const EditDetails = () => {
       extendedDescription: asset.extendedDescription,
       poly: asset.poly
     });
+    if (asset.newImageFile) {
+      console.log("Uploading new image file:", asset.newImageFile);
+      if (assetData.thumbnailId) {
+
+        // If the asset already has a thumbnail doc, replace that doc's file
+        await editThumbnail(assetData.thumbnailId, asset.newImageFile);
+      } else {
+        // If there's no existing doc, create one
+        await uploadThumbnail(assetId, asset.newImageFile);
+      }
+    }
     alert("Asset details updated successfully!");
     navigate('/admin/editassets');
   };
@@ -164,22 +179,28 @@ const EditDetails = () => {
 
     {/* IMAGE PREVIEW AND UPLOAD */}
     <div className="flex flex-col md:flex-row items-center gap-6 mt-6">
-      <div className="relative">
-        <img
-          src={imagePreview}
-          alt="Asset Preview"
-          className="w-48 h-48 object-cover rounded-lg shadow-xl border-2 border-purple-500"
-        />
-      </div>
-      <div className="w-full">
-        <label className="text-gray-300 text-sm">Upload New Image</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none cursor-pointer"
-        />
-      </div>
+        <div className="relative">
+          {imagePreview ? (
+            <img
+              src={imagePreview}
+              alt="Asset Preview"
+              className="w-48 h-48 object-cover rounded-lg shadow-xl border-2 border-purple-500"
+            />
+          ) : (
+            <div className="w-48 h-48 flex items-center justify-center border-2 border-gray-500 rounded-lg">
+              <p className="text-gray-400 text-sm">No Thumbnail</p>
+            </div>
+          )}
+        </div>
+        <div className="w-full">
+          <label className="text-gray-300 text-sm">Upload New Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full bg-[#1b1e33] text-white px-4 py-2 rounded-md border border-gray-500 outline-none cursor-pointer"
+          />
+        </div>
     </div>
 
     {/* TITLE */}

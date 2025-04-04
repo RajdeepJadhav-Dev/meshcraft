@@ -4,11 +4,11 @@ import { OrbitControls, useGLTF, useTexture, Environment } from "@react-three/dr
 import { Link, useLocation } from "react-router-dom";
 import authContext from "../context/authContext";
 
-// Extend R3F primitives if needed
 extend({});
 
-// Improved Model Component
 const Model = ({ modelUrl, scale, rotation }) => {
+  if (!modelUrl) return null;
+
   const defaultScale = scale && scale.length ? scale : [1, 1, 1];
   const defaultRotation = rotation && rotation.length ? rotation : [0, 0, 0];
   const fileExtension = modelUrl.split(".").pop().toLowerCase();
@@ -40,7 +40,6 @@ const Model = ({ modelUrl, scale, rotation }) => {
   }
 };
 
-// Sidebar
 const Sidebar = ({ assets, onAssetClick }) => {
   return (
     <div className="w-full md:w-1/3 bg-gradient-to-b from-gray-800 to-gray-900 p-4 overflow-y-auto text-white rounded-r-lg">
@@ -70,10 +69,10 @@ const Sidebar = ({ assets, onAssetClick }) => {
   );
 };
 
-// ProductCard Component with click effect
 const ProductCard = ({ asset, onClick }) => {
   const [isPressed, setIsPressed] = useState(false);
-  
+  const thumbnailSrc = asset.image || asset.modelUrl;
+
   return (
     <div
       onClick={() => onClick(asset)}
@@ -85,19 +84,17 @@ const ProductCard = ({ asset, onClick }) => {
       } w-full`}
     >
       <div className="relative w-full overflow-hidden rounded-t-2xl h-52 bg-gradient-to-b from-gray-800 to-gray-900">
-        <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-          <ambientLight intensity={1.5} />
-          <directionalLight position={[10, 10, 5]} intensity={2} />
-          <spotLight position={[10, 15, 10]} angle={0.3} intensity={1.5} />
-          <Suspense fallback={null}>
-            <Model
-              modelUrl={asset.modelUrl}
-              scale={asset.scale}
-              rotation={asset.rotation}
-            />
-          </Suspense>
-          <OrbitControls enableRotate={false} />
-        </Canvas>
+        {thumbnailSrc ? (
+           <img
+             src={thumbnailSrc}
+             alt={asset.title || 'Asset thumbnail'}
+             className="object-cover w-full h-full"
+           />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-700">
+            <span className="text-gray-500">No preview</span>
+          </div>
+        )}
       </div>
       <div className="mt-8">
         <p className="font-semibold">{asset.title}</p>
@@ -105,7 +102,11 @@ const ProductCard = ({ asset, onClick }) => {
         <p className="text-gray-400 mb-2 text-xl">{asset.price} value</p>
         <div className="flex items-center space-x-2">
           {asset.softwareLogo && (
-            <img src={asset.softwareLogo} alt={asset.software} className="w-5 h-5" />
+            <img
+              src={asset.softwareLogo}
+              alt={asset.software}
+              className="w-5 h-5"
+            />
           )}
           <p className="text-sm text-gray-400">{asset.software}</p>
         </div>
@@ -114,10 +115,10 @@ const ProductCard = ({ asset, onClick }) => {
   );
 };
 
-// TextureCard Component with click effect
 const TextureCard = ({ asset, onClick }) => {
   const [isPressed, setIsPressed] = useState(false);
-  
+  const thumbnailSrc = asset.image || asset.modelUrl;
+
   return (
     <div
       onClick={() => onClick(asset)}
@@ -130,18 +131,24 @@ const TextureCard = ({ asset, onClick }) => {
     >
       <div className="absolute top-2 left-2 right-2 flex justify-between w-full px-4">
         <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded-md border border-blue-400">
-          {asset.modelUrl.split('.').pop().toUpperCase()}
+          {asset.modelUrl?.split('.').pop().toUpperCase() || 'FILE'}
         </span>
         <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded-md border border-blue-400">
           {asset.price === '0' ? "Free" : asset.price}
         </span>
       </div>
       <div className="w-40 h-40 rounded-full overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl border-2 border-blue-400">
-        <img
-          src={asset.modelUrl}
-          alt={asset.alt || asset.title}
-          className="w-full h-full object-cover"
-        />
+        {thumbnailSrc ? (
+          <img
+            src={thumbnailSrc}
+            alt={asset.alt || asset.title || 'Texture thumbnail'}
+            className="w-full h-full object-cover"
+          />
+         ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-700">
+             <span className="text-gray-500 text-sm">No preview</span>
+          </div>
+         )}
       </div>
       <div className="w-full border-t border-blue-400 my-4"></div>
       <div className="mt-4 text-center w-full">
@@ -151,27 +158,25 @@ const TextureCard = ({ asset, onClick }) => {
   );
 };
 
-// FullscreenCard Component with R3F Canvas
 const FullscreenCard = ({ asset, onClose, filteredAssets, onAssetClick }) => {
+  const thumbnailSrc = asset.image || asset.modelUrl;
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50 text-white p-4 backdrop-blur-sm">
       <div className="bg-gradient-to-b from-gray-800 to-gray-950 rounded-lg shadow-lg shadow-blue-500/20 w-full max-w-4xl h-auto max-h-[90vh] flex flex-col md:flex-row overflow-hidden border border-blue-500/30">
-        <div className="flex-1 flex flex-content items-center p-4">
+        <div className="flex-1 flex flex-col items-center p-4">
           <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden border border-blue-500/30 bg-gradient-to-b from-gray-900 to-black">
-            <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-              <ambientLight intensity={0.8} />
-              <spotLight position={[10, 15, 10]} angle={0.3} intensity={1.5} />
-              <directionalLight position={[-5, 5, -5]} intensity={0.5} />
-              <Suspense fallback={null}>
-                <Model
-                  modelUrl={asset.modelUrl}
-                  scale={asset.scale}
-                  rotation={asset.rotation}
-                />
-              </Suspense>
-              <OrbitControls enableRotate={true} />
-              <Environment preset="sunset" />
-            </Canvas>
+            {thumbnailSrc ? (
+               <img
+                 src={thumbnailSrc}
+                 alt={asset.title || 'Asset full view'}
+                 className="object-contain w-full h-full"
+               />
+             ) : (
+               <div className="w-full h-full flex items-center justify-center bg-gray-700">
+                 <span className="text-gray-500">No preview available</span>
+               </div>
+             )}
           </div>
           <div className="w-full mt-6 text-center">
             <h2 className="text-2xl font-bold mb-2 text-blue-300">{asset.title}</h2>
@@ -206,22 +211,40 @@ const FullscreenCard = ({ asset, onClose, filteredAssets, onAssetClick }) => {
   );
 };
 
-// Main Marketplace Component
 const MarketPlace = () => {
   const location = useLocation();
   const { editAssetData } = useContext(authContext);
 
-  const [fullscreenAsset, setFullscreenAsset] = useState(
-    location.state?.showFullscreen &&
-    (typeof window !== 'undefined' && sessionStorage.getItem("returnToFullscreen") === "true")
-      ? location.state.asset
-      : null
-  );
+  const [fullscreenAsset, setFullscreenAsset] = useState(() => {
+      if (typeof window !== 'undefined') {
+          const savedAsset = sessionStorage.getItem("fullscreenAsset");
+          if (location.state?.showFullscreen && sessionStorage.getItem("returnToFullscreen") === "true" && savedAsset) {
+              try {
+                  return JSON.parse(savedAsset);
+              } catch (e) {
+                  console.error("Error parsing fullscreen asset from session storage", e);
+                  sessionStorage.removeItem("fullscreenAsset");
+                  sessionStorage.removeItem("returnToFullscreen");
+              }
+          } else if (location.state?.asset && location.state?.showFullscreen) {
+             return location.state.asset;
+          }
+          sessionStorage.removeItem("fullscreenAsset");
+          sessionStorage.removeItem("returnToFullscreen");
+      }
+      return null;
+  });
 
   const [filters, setFilters] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       const saved = localStorage.getItem("filters");
-      return saved ? JSON.parse(saved) : [];
+      try {
+        return saved ? JSON.parse(saved) : [];
+      } catch (e) {
+        console.error("Error parsing filters from local storage", e);
+        localStorage.removeItem("filters");
+        return [];
+      }
     }
     return [];
   });
@@ -233,17 +256,15 @@ const MarketPlace = () => {
   const [showTextures, setShowTextures] = useState(false);
 
   useEffect(() => {
-    if (editAssetData) {
-      setIsLoading(true);
-      const loadAssets = () => {
-        const loadedAssets = editAssetData.slice(0, 30);
-        setAssets(loadedAssets);
-        setIsLoading(false);
-        return loadedAssets;
-      };
-      const timeoutId = setTimeout(loadAssets, 100);
-      return () => clearTimeout(timeoutId);
-    }
+     setIsLoading(true);
+     const timeoutId = setTimeout(() => {
+       const initialData = editAssetData || [];
+       console.log("Marketplace: Received editAssetData:", initialData.length, "items");
+       setAssets(initialData);
+       setIsLoading(false);
+     }, 100);
+
+     return () => clearTimeout(timeoutId);
   }, [editAssetData]);
 
   const { modelAssets, textureAssets } = useMemo(() => {
@@ -251,68 +272,83 @@ const MarketPlace = () => {
       return { modelAssets: [], textureAssets: [] };
     }
     return {
-      modelAssets: assets.filter((asset) => asset.poly !== "Texture"),
-      textureAssets: assets.filter((asset) => asset.poly === "Texture")
+      modelAssets: assets.filter((asset) => asset && asset.poly !== "Texture"),
+      textureAssets: assets.filter((asset) => asset && asset.poly === "Texture")
     };
   }, [assets]);
 
   useEffect(() => {
+    let currentlyShowingTextures = false;
     if (filters.length > 0) {
       if (filters.includes("Texture")) {
         setFilteredAssets(textureAssets);
-        setShowTextures(true);
+        currentlyShowingTextures = true;
       } else {
         const newFiltered = modelAssets.filter((asset) => filters.includes(asset.poly));
         setFilteredAssets(newFiltered);
-        setShowTextures(false);
+        currentlyShowingTextures = false;
       }
     } else {
       setFilteredAssets(modelAssets);
-      setShowTextures(false);
+       currentlyShowingTextures = false;
     }
+    setShowTextures(currentlyShowingTextures);
+
     if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem("filters", JSON.stringify(filters));
+        try{
+           localStorage.setItem("filters", JSON.stringify(filters));
+        } catch(e){
+            console.error("Error saving filters to local storage", e);
+        }
     }
+     setVisibleAssets(12);
   }, [filters, modelAssets, textureAssets]);
 
   const handleFilterClick = useCallback((filter) => {
     if (filter === "Texture") {
-      if (filters.includes("Texture")) {
-        setFilters(filters.filter((f) => f !== "Texture"));
-        setShowTextures(false);
+      if (filters.length === 1 && filters.includes("Texture")) {
+        setFilters([]);
       } else {
         setFilters(["Texture"]);
-        setShowTextures(true);
       }
     } else {
-      const newFilters = filters.filter((f) => f !== "Texture");
-      if (newFilters.includes(filter)) {
-        setFilters(newFilters.filter((f) => f !== filter));
+      const otherFilters = filters.filter((f) => f !== "Texture");
+      if (otherFilters.includes(filter)) {
+        setFilters(otherFilters.filter((f) => f !== filter));
       } else {
-        setFilters([...newFilters, filter]);
+        setFilters([...otherFilters, filter]);
       }
-      setShowTextures(false);
     }
   }, [filters]);
 
-  const visibleFilteredAssets = useMemo(() => 
-    filteredAssets.slice(0, visibleAssets), 
-    [filteredAssets, visibleAssets]
-  );
+  const assetsToDisplay = useMemo(() => {
+      if(showTextures) {
+          return filteredAssets.slice(0, visibleAssets);
+      } else if (filters.length > 0) {
+          return filteredAssets.slice(0, visibleAssets);
+      } else {
+          const modelsToShow = modelAssets.slice(0, visibleAssets);
+          const remainingSlots = visibleAssets - modelsToShow.length;
+          const texturesToShow = remainingSlots > 0 ? textureAssets.slice(0, remainingSlots) : [];
+          return [...modelsToShow, ...texturesToShow];
+      }
+  }, [filteredAssets, modelAssets, textureAssets, visibleAssets, showTextures, filters]);
 
-  const visibleTextureAssets = useMemo(() => 
-    textureAssets.slice(0, visibleAssets), 
-    [textureAssets, visibleAssets]
-  );
+  const totalAssetsAvailable = useMemo(() => {
+      if (showTextures) return textureAssets.length;
+      if (filters.length > 0) return filteredAssets.length;
+      return modelAssets.length + textureAssets.length;
+  }, [showTextures, filters, filteredAssets, modelAssets, textureAssets]);
 
   const handleScroll = useCallback(() => {
-    if (typeof window !== 'undefined' && document && 
-        window.innerHeight + document.documentElement.scrollTop >= 
-        document.documentElement.offsetHeight - 1000 && 
-        visibleAssets < filteredAssets.length) {
+    if (typeof window !== 'undefined' && document &&
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 500 &&
+        visibleAssets < totalAssetsAvailable && !isLoading)
+     {
       setVisibleAssets(prev => prev + 12);
     }
-  }, [visibleAssets, filteredAssets.length]);
+  }, [visibleAssets, totalAssetsAvailable, isLoading]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -323,24 +359,23 @@ const MarketPlace = () => {
 
   const handleCardClick = useCallback((asset) => {
     setFullscreenAsset(asset);
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem("returnToFullscreen", "true");
-      sessionStorage.setItem("fullscreenAsset", JSON.stringify(asset));
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+         sessionStorage.setItem("returnToFullscreen", "true");
+         sessionStorage.setItem("fullscreenAsset", JSON.stringify(asset));
+      } catch (e) {
+          console.error("Error saving fullscreen state to session storage", e);
+      }
     }
   }, []);
 
-  const closeCard = useCallback(() => {
-    setFullscreenAsset(null);
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem("returnToFullscreen");
-      sessionStorage.removeItem("fullscreenAsset");
-    }
-    if (editAssetData) {
-      const refreshedAssets = editAssetData.slice(0, 30);
-      setAssets(refreshedAssets);
-      setVisibleAssets(12);
-    }
-  }, [editAssetData]);
+   const closeCard = useCallback(() => {
+     setFullscreenAsset(null);
+     if (typeof window !== 'undefined' && window.sessionStorage) {
+       sessionStorage.removeItem("returnToFullscreen");
+       sessionStorage.removeItem("fullscreenAsset");
+     }
+   }, []);
 
   return (
     <>
@@ -348,65 +383,64 @@ const MarketPlace = () => {
         <FullscreenCard
           asset={fullscreenAsset}
           onClose={closeCard}
-          filteredAssets={filteredAssets.length > 0 ? filteredAssets : assets}
+          filteredAssets={assets.filter(a => a._id !== fullscreenAsset._id).slice(0, 10)}
           onAssetClick={handleCardClick}
         />
       )}
+
       <section className="bg-gradient-to-b from-gray-950 to-black min-h-screen py-12">
-        {/* Adjusted padding to px-16 (64px) */}
-        <div className="text-white px-16">
+        <div className="text-white px-4 sm:px-8 md:px-16">
           <h1 className="text-4xl font-bold pt-10 text-blue-300">Marketplace</h1>
-          
+
           <div className="mb-6 flex flex-wrap items-center gap-2 mt-4">
-            {["High Poly", "Medium Poly", "Low Poly", "Texture"].map((filter) => (
-              <span
-                key={filter}
-                className={`px-2 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base rounded-lg cursor-pointer transform transition-all duration-200 active:scale-95 ${
-                  filters.includes(filter)
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/50"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                }`}
-                onClick={() => handleFilterClick(filter)}
-              >
-                {filter}
-              </span>
-            ))}
+             {["High Poly", "Medium Poly", "Low Poly", "Texture"].map((filter) => (
+               <span
+                 key={filter}
+                 className={`px-2 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base rounded-lg cursor-pointer transform transition-all duration-200 active:scale-95 ${
+                   filters.includes(filter)
+                     ? "bg-blue-600 text-white shadow-md shadow-blue-500/50"
+                     : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                 }`}
+                 onClick={() => handleFilterClick(filter)}
+               >
+                 {filter}
+               </span>
+             ))}
           </div>
 
-          {isLoading ? (
+          {isLoading && assets.length === 0 ? (
             <div className="flex items-center justify-center h-64">
               <div className="w-12 h-12 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
               <p className="ml-4 text-lg text-gray-300">Loading assets...</p>
             </div>
           ) : (
-            <>
-              {/* Adjusted grid gap to gap-6 (24px) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {showTextures ? (
-                  visibleFilteredAssets.map((asset, index) => (
-                    <TextureCard key={`texture-${index}`} asset={asset} onClick={handleCardClick} />
-                  ))
-                ) : (
-                  <>
-                    {visibleFilteredAssets.map((asset, index) => (
-                      <ProductCard key={`asset-${index}`} asset={asset} onClick={handleCardClick} />
-                    ))}
-                    {filters.length === 0 &&
-                      visibleTextureAssets.map((asset, index) => (
-                        <TextureCard key={`texture-${index}`} asset={asset} onClick={handleCardClick} />
-                      ))}
-                  </>
-                )}
-              </div>
+             <>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+                 {assetsToDisplay.length > 0 ? (
+                      assetsToDisplay.map((asset, index) =>
+                        asset.poly === "Texture" ? (
+                           <TextureCard key={`texture-${asset._id || index}`} asset={asset} onClick={handleCardClick} />
+                        ) : (
+                           <ProductCard key={`asset-${asset._id || index}`} asset={asset} onClick={handleCardClick} />
+                        )
+                     )
+                 ) : (
+                    !isLoading && <p className="col-span-full text-center text-gray-400 mt-10">No assets found matching your criteria.</p>
+                 )}
+               </div>
 
-              {(filteredAssets.length > visibleAssets || textureAssets.length > visibleAssets) && (
-                <div className="flex justify-center mt-8 pb-8">
-                  <div className="w-8 h-8 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-                  <p className="ml-2 text-gray-400">Loading more assets...</p>
-                </div>
-              )}
-            </>
-          )}
+               {visibleAssets < totalAssetsAvailable && (
+                 <div className="flex justify-center items-center mt-8 pb-8 h-16">
+                   {!isLoading && (
+                     <>
+                       <div className="w-8 h-8 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                       <p className="ml-2 text-gray-400">Loading more assets...</p>
+                     </>
+                    )}
+                 </div>
+               )}
+             </>
+           )}
         </div>
       </section>
     </>
