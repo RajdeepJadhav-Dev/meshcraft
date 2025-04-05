@@ -14,23 +14,16 @@ const uploadToGridFS = async (fileBuffer, fileName) => {
     const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
     bucketName: 'thumbnails',
   });
-
   const readableFile = new Readable();
   readableFile.push(fileBuffer);
   readableFile.push(null);
-
   const uploadStream = bucket.openUploadStream(fileName);
-
   return new Promise((resolve, reject) => {
     uploadStream.on('error', (error) => {
       console.error('GridFS Upload Error:', error);
       reject(new Error('Error uploading file to GridFS'));
     });
-
-    uploadStream.on('finish', () => {
-      resolve(uploadStream.id);
-    });
-
+    uploadStream.on('finish', () => resolve(uploadStream.id));
     readableFile.pipe(uploadStream);
   });
 };
@@ -59,14 +52,15 @@ exports.handler = async (event, context) => {
     return createResponse(500, { error: 'Database connection failed' });
   }
 
-  const { httpMethod, path } = event;
+  const { httpMethod, queryStringParameters } = event;
 
-  const pathParts = path.split('/').filter(Boolean);
-  const thumbId = pathParts.pop();
+  // --- Get ID from query parameter ---
+  const thumbId = queryStringParameters?.id;
 
   if (!thumbId || !mongoose.Types.ObjectId.isValid(thumbId)) {
-    return createResponse(400, { error: 'Invalid or missing thumbnail ID in path' });
+    return createResponse(400, { error: 'Invalid or missing thumbnail ID in query parameters' });
   }
+  // --- End ID change ---
 
   if (httpMethod === 'GET') {
     try {
@@ -87,33 +81,27 @@ exports.handler = async (event, context) => {
       if (!thumbDoc) {
         return createResponse(404, { error: 'Thumbnail document not found' });
       }
-
       const result = await parser.parse(event);
       if (!result.files || result.files.length === 0) {
         return createResponse(400, { error: 'No new file provided. Ensure field name is "imageFile".' });
       }
       const file = result.files[0];
-
       const oldFileId = thumbDoc.fileId;
       try {
         await deleteFromGridFS(oldFileId);
       } catch (deleteErr) {
         console.warn(`Could not delete old GridFS file ${oldFileId}:`, deleteErr);
       }
-
       const fileName = file.filename || `thumbnail-${Date.now()}`;
       const fileBuffer = file.content;
       const newFileId = await uploadToGridFS(fileBuffer, fileName);
-
       thumbDoc.fileId = newFileId;
       thumbDoc.originalFileName = fileName;
       await thumbDoc.save();
-
       return createResponse(200, {
         message: 'Thumbnail replaced successfully',
         thumbnail: thumbDoc,
       });
-
     } catch (err) {
         if (err.message.includes('GridFS')) {
              return createResponse(500, { error: err.message });
@@ -133,15 +121,10 @@ exports.handler = async (event, context) => {
       if (!thumbDoc) {
         return createResponse(200, { message: 'Thumbnail not found, considered deleted.' });
       }
-
       const fileIdToDelete = thumbDoc.fileId;
-
       await Thumbnail.deleteOne({ _id: thumbId });
-
       await deleteFromGridFS(fileIdToDelete);
-
       return createResponse(200, { message: 'Thumbnail doc and file removed successfully' });
-
     } catch (err) {
         if (err.message.includes('GridFS')) {
              return createResponse(500, { error: err.message });

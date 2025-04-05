@@ -2,7 +2,6 @@ const connectToDatabase = require('../config/db');
 const Thumbnail = require('../models/Thumbnail');
 const mongoose = require('mongoose');
 
-
 const createResponse = (statusCode, body, headers = {}, isBase64Encoded = false) => ({
   statusCode,
   headers,
@@ -14,17 +13,11 @@ const getContentType = (filename) => {
   if (!filename) return 'application/octet-stream';
   const ext = filename.split('.').pop().toLowerCase();
   switch (ext) {
-    case 'jpg':
-    case 'jpeg':
-      return 'image/jpeg';
-    case 'png':
-      return 'image/png';
-    case 'gif':
-      return 'image/gif';
-    case 'webp':
-      return 'image/webp';
-    default:
-      return 'application/octet-stream';
+    case 'jpg': case 'jpeg': return 'image/jpeg';
+    case 'png': return 'image/png';
+    case 'gif': return 'image/gif';
+    case 'webp': return 'image/webp';
+    default: return 'application/octet-stream';
   }
 };
 
@@ -35,11 +28,7 @@ const readFromGridFS = async (fileId) => {
     });
     const downloadStream = bucket.openDownloadStream(fileId);
     const chunks = [];
-
-    downloadStream.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-
+    downloadStream.on('data', chunk => chunks.push(chunk));
     downloadStream.on('error', (error) => {
       console.error('GridFS Download Error:', error);
       if (error.code === 'ENOENT') {
@@ -48,10 +37,7 @@ const readFromGridFS = async (fileId) => {
         reject(new Error('Error streaming file from GridFS'));
       }
     });
-
-    downloadStream.on('end', () => {
-      resolve(Buffer.concat(chunks));
-    });
+    downloadStream.on('end', () => resolve(Buffer.concat(chunks)));
   });
 };
 
@@ -63,37 +49,34 @@ exports.handler = async (event, context) => {
     return createResponse(500, JSON.stringify({ error: 'Database connection failed' }), { 'Content-Type': 'application/json' });
   }
 
-  const { httpMethod, path } = event;
+  const { httpMethod, queryStringParameters } = event;
 
   if (httpMethod !== 'GET') {
     return createResponse(405, JSON.stringify({ error: 'Method Not Allowed' }), { 'Content-Type': 'application/json' });
   }
 
-  const pathParts = path.split('/').filter(Boolean);
-  const thumbId = pathParts.pop();
+  // --- Get ID from query parameter ---
+  const thumbId = queryStringParameters?.id;
 
   if (!thumbId || !mongoose.Types.ObjectId.isValid(thumbId)) {
-    return createResponse(400, JSON.stringify({ error: 'Invalid or missing thumbnail ID in path' }), { 'Content-Type': 'application/json' });
+    return createResponse(400, JSON.stringify({ error: 'Invalid or missing thumbnail ID in query parameters' }), { 'Content-Type': 'application/json' });
   }
+  // --- End ID change ---
 
-  let thumbDoc; // Declare here to access in catch block if needed
+  let thumbDoc;
   try {
     thumbDoc = await Thumbnail.findById(thumbId);
     if (!thumbDoc) {
       return createResponse(404, JSON.stringify({ error: 'Thumbnail metadata not found' }), { 'Content-Type': 'application/json' });
     }
-
     const fileBuffer = await readFromGridFS(thumbDoc.fileId);
-
     const contentType = getContentType(thumbDoc.originalFileName);
-
     return createResponse(
         200,
         fileBuffer.toString('base64'),
         { 'Content-Type': contentType },
         true
     );
-
   } catch (err) {
     if (err.message === 'FileNotFound') {
         console.error(`GridFS file not found for Thumbnail ${thumbId}, fileId ${thumbDoc?.fileId}`);

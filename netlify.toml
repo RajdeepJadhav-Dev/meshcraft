@@ -5,35 +5,7 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
-
-[[redirects]]
-  from = "/thumbnail"
-  to = "/.netlify/functions/thumbnail"
-  status = 200
-  force = true
-  conditions = {HttpMethod = ["GET"]}
-
-[[redirects]]
-  from = "/thumbnail"
-  to = "/.netlify/functions/thumbnail"
-  status = 200
-  force = true
-  conditions = {HttpMethod = ["POST"]}
-
-[[redirects]]
-  from = "/thumbnail/:id"
-  to = "/.netlify/functions/thumbnail-id"
-  status = 200
-  force = true
-  conditions = {HttpMethod = ["GET", "PUT", "DELETE"]}
-
-[[redirects]]
-  from = "/thumbnail/view/:id"
-  to = "/.netlify/functions/thumbnail-view"
-  status = 200
-  force = true
-  conditions = {HttpMethod = ["GET"]}
-
+  
   [[redirects]]
   from = "/*"
   to = "/index.html"
