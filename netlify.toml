@@ -7,3 +7,17 @@
   status = 200
 
 
+[[redirects]]
+  from = "/thumbnail/view/:id"
+  to = "/.netlify/functions/thumbnail-view/:id"
+  status = 200
+
+[[redirects]]
+  from = "/thumbnail/:id"
+  to = "/.netlify/functions/thumbnail-id/:id"
+  status = 200
+
+[[redirects]]
+  from = "/thumbnail"
+  to = "/.netlify/functions/thumbnail"
+  status = 200
