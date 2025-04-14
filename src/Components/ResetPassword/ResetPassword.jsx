@@ -28,7 +28,8 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState("");
   const [success, setSuccess] = useState(false);
-
+  const IS_LOCAL = process.env.NODE_ENV === 'development';
+  const BASE_URL = IS_LOCAL ? 'http://localhost:5000/auth' : '/.netlify/functions';
   const validateForm = () => {
     const newErrors = {};
 
@@ -59,7 +60,7 @@ export default function ResetPassword() {
     if (!validateForm()) return;
 
     try {
-      await axios.post(`/.netlify/functions/resetPassword`, {
+      await axios.post(`${BASE_URL}/resetPassword`, {
         userId,
         token,
         newPassword,

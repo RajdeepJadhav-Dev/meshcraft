@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 const Input = ({ id, label, type, autoComplete, value, onChange, icon, error }) => {
   const [showPassword, setShowPassword] = useState(false);
+  
 
   return (
     <div className="mb-4 relative">
@@ -53,6 +54,8 @@ export default function SignUp() {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const IS_LOCAL = process.env.NODE_ENV === 'development';
+const BASE_URL = IS_LOCAL ? 'http://localhost:5000/auth' : '/.netlify/functions';
 
   const validateForm = () => {
     const newErrors = {};
@@ -107,7 +110,7 @@ export default function SignUp() {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("/.netlify/functions/register", formData);
+      const response = await axios.post(`${BASE_URL}/register`, formData);
       setIsLoginForm(true);
       setFormData({
         username: "",
@@ -143,7 +146,7 @@ const handleLogin = async (e) => {
   if (!validateForm()) return;
 
   try {
-    const response = await axios.post("/.netlify/functions/login", formData);
+    const response = await axios.post(`${BASE_URL}/login`, formData);
     localStorage.setItem("user", JSON.stringify(response.data));
 
     const user = JSON.parse(localStorage.getItem("user"));

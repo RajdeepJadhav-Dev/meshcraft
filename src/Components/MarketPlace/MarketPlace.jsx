@@ -425,7 +425,10 @@ const MarketPlace = () => {
                         )
                      )
                  ) : (
-                    !isLoading && <p className="col-span-full text-center text-gray-400 mt-10">No assets found matching your criteria.</p>
+                    !isLoading &&  <>
+                    <div className="w-8 h-8 border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    <p className="ml-2 text-gray-400">Please wait while we load your assets...</p>
+                  </>
                  )}
                </div>
 

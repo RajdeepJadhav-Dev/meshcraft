@@ -47,6 +47,8 @@ const Profile = () => {
     const discordId = queryParams.get("discordId");
     const discordUsername = queryParams.get("discordUsername");
     const discordAvatar = queryParams.get("discordAvatar");
+    const IS_LOCAL = process.env.NODE_ENV === 'development';
+    const BASE_URL = IS_LOCAL ? 'http://localhost:5000/auth' : '/.netlify/functions';
 
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
@@ -114,7 +116,7 @@ const Profile = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch("/.netlify/functions/updateUsername", {
+      const response = await fetch(`${BASE_URL}/updateUsername`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user._id, username }),
@@ -148,7 +150,7 @@ const Profile = () => {
 
     try {
         setIsLoading(true);
-        const response = await fetch("/.netlify/functions/updatePassword", {
+        const response = await fetch(`${BASE_URL}/updatePassword`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -198,7 +200,7 @@ const handleProfilePictureChange = async (e) => {
       };
 
       try {
-          const response = await fetch("/.netlify/functions/updateProfilePicture", {
+          const response = await fetch(`${BASE_URL}/updateProfilePicture`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(payload),

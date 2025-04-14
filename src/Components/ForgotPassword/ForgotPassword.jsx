@@ -34,7 +34,10 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const IS_LOCAL = process.env.NODE_ENV === 'development';
+  const BASE_URL = IS_LOCAL ? 'http://localhost:5000/auth' : '/.netlify/functions';
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -43,7 +46,7 @@ export default function ForgotPassword() {
     }
 
     try {
-      await axios.post("/.netlify/functions/forgotPassword", { email });
+      await axios.post(`${BASE_URL}/forgotPassword`, { email });
       setSuccess(true);
       setError("");
     } catch (err) {

@@ -10,6 +10,10 @@ const AdminLogin = () => {
   });
   const [feedback, setFeedback] = useState({ error: null, success: null });
   const navigate = useNavigate();
+  const IS_LOCAL = process.env.NODE_ENV === 'development';
+  const endpoint = IS_LOCAL
+    ? 'http://localhost:5000/admin/login'
+    : '/.netlify/functions/adminlogin';
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -20,7 +24,7 @@ const AdminLogin = () => {
     setFeedback({ error: null, success: null });
 
     try {
-      const response = await fetch("/.netlify/functions/adminlogin", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
