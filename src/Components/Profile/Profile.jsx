@@ -378,7 +378,7 @@ const handleProfilePictureChange = async (e) => {
     </div>
 
     <div>
-      <h2 className="text-base sm:text-lg font-semibold text-gray-200 mb-2 lg:mb-4">Discord</h2>
+      <h2 className="text-base sm:text-lg font-semibold text-gray-200 mb-2 lg:mb-4 ">Discord</h2>
       {user?.discordId ? (
         <div className="flex items-center gap-4">
           {discordAvatar && (
@@ -401,7 +401,10 @@ const handleProfilePictureChange = async (e) => {
           <FaDiscord className="w-5 h-5" />
           Connect Discord
         </button>
+        
       )}
+<a  href="http://localhost:5000/auth/steam/">Sign in with Steam</a>
+
     </div>
   </div>
 </div>
